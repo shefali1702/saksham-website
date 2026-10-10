@@ -1,147 +1,206 @@
 /* ==========================================================================
-   SAKSHAM — BULLETPROOF VISIBLE 30-MODULE INJECTOR
+   SAKSHAM — CORE APP ENGINE (State, Audio, Canvas & Scenarios)
    ========================================================================== */
 
-(function() {
-  const BUILDINGS_30 = [
-    { id: 1, name: "Primary School", district: "Education", icon: "🏫", law: "Article 21A (RTE Act)" },
-    { id: 2, name: "High School", district: "Education", icon: "🎓", law: "Right to Free Secondary Care" },
-    { id: 3, name: "Library Hub", district: "Education", icon: "📚", law: "Right to Knowledge & Digital Access" },
-    { id: 4, name: "Vocational Centre", district: "Education", icon: "🛠️", law: "Skill Development Protection" },
-    { id: 5, name: "Anganwadi Care", district: "Education", icon: "🍼", law: "POSHAN Abhiyaan & Early Care" },
-    { id: 6, name: "Play School", district: "Education", icon: "🎨", law: "Early Childhood Care Rights" },
-    { id: 7, name: "Police Station", district: "Legal", icon: "🚓", law: "Special Juvenile Police Unit (SJPU)" },
-    { id: 8, name: "Safe House", district: "Legal", icon: "🛡️", law: "POCSO Confidential Protection" },
-    { id: 9, name: "Family Court", district: "Legal", icon: "⚖️", law: "Child-Friendly Legal Proceedings" },
-    { id: 10, name: "NALSA Legal Aid", district: "Legal", icon: "🏛️", law: "Free Legal Representation Rights" },
-    { id: 11, name: "CWC Office", district: "Legal", icon: "📋", law: "Child Welfare Committee Authority" },
-    { id: 12, name: "Rescue Station", district: "Legal", icon: "🚨", law: "1098 Immediate Intervention Unit" },
-    { id: 13, name: "Highway Dhaba", district: "Labor", icon: "🍲", law: "Child Labour Prohibition Act" },
-    { id: 14, name: "Brick Kiln", district: "Labor", icon: "🏭", law: "Hazardous Employment Ban" },
-    { id: 15, name: "Garment Unit", district: "Labor", icon: "🧵", law: "Factory Act Minimum Age Standards" },
-    { id: 16, name: "Tea Stall", district: "Labor", icon: "☕", law: "Commercial Establishment Ban" },
-    { id: 17, name: "Firecracker Unit", district: "Labor", icon: "💥", law: "Strict Hazardous Occupation Prohibition" },
-    { id: 18, name: "Agricultural Farm", district: "Labor", icon: "🌾", law: "Seasonal School Attendance Mandate" },
-    { id: 19, name: "Gram Panchayat", district: "Civic", icon: "🏛️", law: "Prohibition of Child Marriage Act" },
-    { id: 20, name: "Health Centre", district: "Civic", icon: "🏥", law: "Right to Essential Health & Vaccines" },
-    { id: 21, name: "Shelter Home", district: "Civic", icon: "🏡", law: "Juvenile Justice Care & Protection" },
-    { id: 22, name: "Youth Club", district: "Civic", icon: "⚽", law: "Right to Recreation & Play" },
-    { id: 23, name: "Helpline Post", district: "Civic", icon: "📞", law: "Childline 1098 Emergency Access" },
-    { id: 24, name: "Nutrition Hub", district: "Civic", icon: "🍎", law: "Mid-Day Meal Scheme Right" },
-    { id: 25, name: "Media Station", district: "Awareness", icon: "📻", law: "Right to Expression & Voice" },
-    { id: 26, name: "Open Theatre", district: "Awareness", icon: "🎭", law: "Cultural Rights Awareness" },
-    { id: 27, name: "Rights Academy", district: "Awareness", icon: "📖", law: "Constitutional Awareness Training" },
-    { id: 28, name: "Innovation Hub", district: "Awareness", icon: "💡", law: "Child Rights Tech Development" },
-    { id: 29, name: "Advocacy Forum", district: "Awareness", icon: "📢", law: "Child Participation Rights" },
-    { id: 30, name: "Hall of Champions", district: "Awareness", icon: "🏆", law: "Master Rights Certification" }
-  ];
+// --- 1. SPA Navigation Switcher ---
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
 
-  let unlockedList = JSON.parse(localStorage.getItem('saksham_buildings_30')) || [];
+  const targetTab = document.getElementById(`tab-${tabId}`);
+  if (targetTab) targetTab.classList.add('active');
 
-  function forceRenderGrid() {
-    // Find main container or fallback to body
-    let parent = document.querySelector('main') || document.body;
-    
-    // Check if grid already exists, otherwise create it
-    let gridContainer = document.getElementById('forced-30-modules-grid');
-    if (!gridContainer) {
-      gridContainer = document.createElement('div');
-      gridContainer.id = 'forced-30-modules-grid';
-      gridContainer.style.cssText = `
-        max-width: 1200px;
-        margin: 3rem auto;
-        padding: 0 1.5rem;
-        position: relative;
-        z-index: 50;
-      `;
-      parent.appendChild(gridContainer);
+  // Highlight button
+  const activeBtn = Array.from(document.querySelectorAll('.nav-btn'))
+    .find(btn => btn.getAttribute('onclick').includes(tabId));
+  if (activeBtn) activeBtn.classList.add('active');
+
+  SakshamAudio.playBeep();
+}
+
+// --- 2. Web Audio API Sound Synthesizer (Zero Assets Needed) ---
+const SakshamAudio = {
+  ctx: null,
+  enabled: true,
+
+  init() {
+    if (!this.ctx) {
+      this.ctx = new (window.AudioContext || window.webkitAudioContext)();
     }
+  },
 
-    gridContainer.innerHTML = `
-      <div style="background: rgba(30, 27, 75, 0.9); padding: 1.5rem 2rem; border-radius: 20px; margin-bottom: 2rem; border: 1px solid rgba(255,255,255,0.2); display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(10px);">
-        <h2 style="color: #fff; font-size: 1.5rem; margin: 0;">🚀 SAKSHAM 30-Module Ecosystem</h2>
-        <span style="background: #10b981; color: white; padding: 0.5rem 1rem; border-radius: 999px; font-weight: bold; font-size: 0.9rem;">
-          ${unlockedList.length} / 30 Completed
-        </span>
-      </div>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
-        ${BUILDINGS_30.map(b => {
-          const done = unlockedList.includes(b.id);
-          return `
-            <div onclick="window.openSakshamModal(${b.id})" style="
-              background: ${done ? 'rgba(16, 185, 129, 0.2)' : 'rgba(15, 23, 42, 0.85)'};
-              border: 2px solid ${done ? '#10b981' : 'rgba(255, 255, 255, 0.15)'};
-              border-radius: 16px;
-              padding: 1.25rem;
-              text-align: center;
-              cursor: pointer;
-              transition: transform 0.2s ease, border-color 0.2s ease;
-              box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            ">
-              <span style="font-size: 2.5rem; display: block; margin-bottom: 0.5rem;">${b.icon}</span>
-              <h4 style="color: #fff; font-size: 1rem; margin-bottom: 0.2rem;">#${b.id}${b.name}</h4>
-              <p style="color: #94a3b8; font-size: 0.75rem; margin-bottom: 0.75rem;">${b.district}</p>
-              <span style="display: inline-block; font-size: 0.75rem; font-weight: bold; color: ${done ? '#34d399' : '#fbbf24'};">
-                ${done ? '🟢 Completed' : '🔒 Tap to Explore'}
-              </span>
-            </div>
-          `;
-        }).join('')}
+  toggle() {
+    this.enabled = !this.enabled;
+    document.getElementById('sound-toggle').innerText = this.enabled ? '🔊 Sound' : '🔇 Muted';
+  },
+
+  playBeep(freq = 440, duration = 0.1) {
+    if (!this.enabled) return;
+    this.init();
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0.05, this.ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+    osc.start();
+    osc.stop(this.ctx.currentTime + duration);
+  }
+};
+
+// --- 3. Main Application Engine & State ---
+const SakshamEngine = {
+  unlocked: JSON.parse(localStorage.getItem('saksham_unlocked')) || [],
+
+  scenarios: {
+    school: {
+      title: "🏫 School — Right to Education",
+      story: "Raju's parents want him to stop going to school to work in the field. What should he do?",
+      choices: [
+        { text: "Quit school quietly.", correct: false, feedback: "Incorrect. Education is every child's right up to age 14!" },
+        { text: "Inform the teacher & school management committee.", correct: true, feedback: "Correct! Article 21A guarantees free & compulsory education." }
+      ]
+    },
+    dhaba: {
+      title: "🍲 Dhaba — Child Labor Protection",
+      story: "11-year-old Chotu works 12 hours a day at a highway tea stall instead of studying.",
+      choices: [
+        { text: "Ignore it.", correct: false, feedback: "Incorrect. Child labor under 14 is completely prohibited." },
+        { text: "Report to Childline (1098).", correct: true, feedback: "Correct! Calling 1098 alerts child protection services." }
+      ]
+    }
+  },
+
+  openBuilding(id) {
+    const sc = this.scenarios[id] || {
+      title: "🏛️ Community Center",
+      story: "Learn about your legal rights and local panchayat protection.",
+      choices: [{ text: "Understand Law", correct: true, feedback: "You learned your fundamental right!" }]
+    };
+
+    const modalBody = document.getElementById('modal-body');
+    modalBody.innerHTML = `
+      <h3>${sc.title}</h3>
+      <p style="margin: 1rem 0; color: #cbd5e1;">${sc.story}</p>
+      <div style="display:flex; flex-direction:column; gap:0.75rem;">
+        ${sc.choices.map((c, idx) => `
+          <button class="btn-primary" onclick="SakshamEngine.makeChoice('${id}', ${c.correct}, '${c.feedback}')">
+            ${c.text}
+          </button>
+        `).join('')}
       </div>
     `;
-  }
 
-  window.openSakshamModal = function(id) {
-    const b = BUILDINGS_30.find(i => i.id === id);
-    if (!b) return;
+    document.getElementById('scenario-modal').classList.remove('hidden');
+  },
 
-    let modal = document.getElementById('saksham-popup-modal');
-    if (!modal) {
-      modal = document.createElement('div');
-      modal.id = 'saksham-popup-modal';
-      modal.style.cssText = `
-        position: fixed; inset: 0; background: rgba(0,0,0,0.85);
-        display: flex; align-items: center; justify-content: center; z-index: 99999;
-        backdrop-filter: blur(8px);
-      `;
-      modal.innerHTML = `
-        <div style="background: #1e1b4b; border: 1px solid rgba(255,255,255,0.2); padding: 2.5rem; border-radius: 24px; max-width: 480px; width: 90%; color: #fff; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.5);">
-          <button onclick="document.getElementById('saksham-popup-modal').style.display='none'" style="position: absolute; top: 1rem; right: 1.5rem; background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer;">✕</button>
-          <div id="saksham-modal-content"></div>
-        </div>
-      `;
-      document.body.appendChild(modal);
+  makeChoice(buildingId, isCorrect, feedback) {
+    if (isCorrect) {
+      if (!this.unlocked.includes(buildingId)) {
+        this.unlocked.push(buildingId);
+        localStorage.setItem('saksham_unlocked', JSON.stringify(this.unlocked));
+      }
+      alert(`🎉 Correct! ${feedback}`);
+      this.updateUI();
     } else {
-      modal.style.display = 'flex';
+      alert(`❌ ${feedback}`);
     }
+    this.closeModal();
+  },
 
-    document.getElementById('saksham-modal-content').innerHTML = `
-      <div style="text-align: center;">
-        <span style="font-size: 3.5rem; display: block; margin-bottom: 0.5rem;">${b.icon}</span>
-        <h2 style="margin: 0 0 0.5rem 0; color: #fff; font-size: 1.5rem;">${b.name}</h2>
-        <p style="color: #fbbf24; font-weight: bold; margin-bottom: 1.25rem;">District: ${b.district}</p>
-        <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; text-align: left; border: 1px solid rgba(255,255,255,0.1);">
-          <strong style="color: #38bdf8;">⚖️ Governed Law:</strong><br><span style="color: #cbd5e1; font-size: 0.95rem;">${b.law}</span>
-        </div>
-        <button onclick="window.markCompleted(${b.id})" style="background: linear-gradient(135deg, #6366f1, #a855f7); color: white; border: none; padding: 0.85rem 1.5rem; border-radius: 999px; font-weight: bold; cursor: pointer; width: 100%; box-shadow: 0 4px 15px rgba(99,102,241,0.4);">
-          Mark Module Complete ✅
-        </button>
-      </div>
-    `;
-  };
+  closeModal() {
+    document.getElementById('scenario-modal').classList.add('hidden');
+  },
 
-  window.markCompleted = function(id) {
-    if (!unlockedList.includes(id)) {
-      unlockedList.push(id);
-      localStorage.setItem('saksham_buildings_30', JSON.stringify(unlockedList));
-      forceRenderGrid();
-    }
-    document.getElementById('saksham-popup-modal').style.display = 'none';
-  };
+  updateUI() {
+    document.getElementById('unlocked-count').innerText = `${this.unlocked.length} / 4`;
+    this.unlocked.forEach(id => {
+      const el = document.getElementById(`status-${id}`);
+      if (el) {
+        el.innerText = "Unlocked 🟢";
+        el.style.color = "#10b981";
+      }
+    });
+  },
 
-  if (document.readyState === 'loading') {
-    window.addEventListener('DOMContentLoaded', forceRenderGrid);
-  } else {
-    forceRenderGrid();
+  askGyani(topic) {
+    const gyaniText = document.getElementById('gyani-speech');
+    if (topic === 'rte') gyaniText.innerText = "Hoo-hoo! The RTE Act ensures every child aged 6-14 gets free education!";
+    if (topic === 'labor') gyaniText.innerText = "Child labor under 14 is illegal in India under the Child Labour Act!";
+    if (topic === 'help') gyaniText.innerText = "You can dial 1098 anytime for free emergency help!";
+  },
+
+  generateCertificate() {
+    const name = document.getElementById('user-name-input').value || "Child Rights Champion";
+    const canvas = document.getElementById('cert-canvas');
+    const ctx = canvas.getContext('2d');
+
+    // Draw Certificate Background
+    ctx.fillStyle = '#1e1b4b';
+    ctx.fillRect(0, 0, 800, 500);
+    ctx.strokeStyle = '#fbbf24';
+    ctx.lineWidth = 10;
+    ctx.strokeRect(20, 20, 760, 460);
+
+    // Text
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '30px Outfit';
+    ctx.textAlign = 'center';
+    ctx.fillText("CERTIFICATE OF ADVOCACY", 400, 100);
+
+    ctx.font = '20px Plus Jakarta Sans';
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillText("This certifies that", 400, 180);
+
+    ctx.font = '36px Outfit';
+    ctx.fillStyle = '#fbbf24';
+    ctx.fillText(name, 400, 240);
+
+    ctx.font = '18px Plus Jakarta Sans';
+    ctx.fillStyle = '#cbd5e1';
+    ctx.fillText("has successfully completed the SAKSHAM Child Rights Training.", 400, 310);
   }
-})();
+};
+
+// --- 4. Ambient Canvas Particle Animation ---
+function initCanvasParticles() {
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const particles = Array.from({ length: 40 }, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 3 + 1,
+    dx: (Math.random() - 0.5) * 0.5,
+    dy: (Math.random() - 0.5) * 0.5
+  }));
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+
+    particles.forEach(p => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fill();
+
+      p.x += p.dx;
+      p.y += p.dy;
+
+      if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+      if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+    });
+
+    requestAnimationFrame(animate);
+  }
+  animate();
+}
+
+// Initializing on Page Load
+window.addEventListener('DOMContentLoaded', () => {
+  SakshamEngine.updateUI();
+  initCanvasParticles();
+});

@@ -284,6 +284,117 @@ footer .row{justify-content:flex-start;margin-top:10px}
 .tdot{width:14px;height:14px;border-radius:50%;border:0;background:rgba(255,255,255,.7);box-shadow:inset 0 0 0 2px rgba(120,80,80,.25);cursor:pointer;padding:0;margin:0 2px}
 .tdot.on{background:#ff8470;transform:scale(1.3)}
 .tlbl{font-weight:800;min-width:78px;text-align:center}
+
+/* =============== v3: tabs, map, facts, community, badges =============== */
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 150px)}
+.tabs{max-width:1100px;margin:8px auto 0;display:flex;gap:6px;padding:6px;border-radius:999px;overflow-x:auto;scrollbar-width:none;justify-content:center}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;display:flex;align-items:center;gap:6px;border:0;border-radius:99px;padding:8px 16px;min-height:42px;font-weight:800;font-size:15px;color:var(--ink);background:transparent;transition:transform .4s var(--spring),background .25s,box-shadow .25s}
+.tab:hover{transform:translateY(-2px);background:rgba(255,255,255,.55)}
+.tab[aria-selected="true"]{background:linear-gradient(160deg,#ff9d86,#ee6f59);color:#fff;box-shadow:0 8px 16px rgba(232,113,92,.4),inset 0 2px 3px rgba(255,255,255,.5)}
+.tab:focus-visible{outline:3px solid #fff;box-shadow:0 0 0 6px var(--coral)}
+.tab .ti{font-size:18px}
+@media(max-width:520px){.tab{padding:8px 11px;font-size:13px;gap:4px}.tab .ti{font-size:16px}}
+
+/* map */
+.mapsec{padding:20px;margin:24px 0;border-radius:38px}
+.mhead{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.mhead h2{font-size:clamp(24px,4vw,34px)}
+.mhead p{margin:4px 0 0;color:var(--muted);font-weight:600;max-width:560px}
+.tmap{display:grid;grid-template-columns:repeat(9,1fr);gap:6px;max-width:640px;margin:18px auto 14px;padding:12px;border-radius:30px;background:rgba(255,255,255,.4);box-shadow:inset 0 3px 8px rgba(150,90,70,.15)}
+.tl{aspect-ratio:1;min-width:0;border:0;border-radius:32%;padding:0;position:relative;font-family:var(--display);font-weight:800;font-size:clamp(10px,2.3vw,15px);color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.35);background:linear-gradient(150deg,var(--c1),var(--c2));box-shadow:0 6px 10px rgba(120,70,50,.22),inset 0 2px 3px rgba(255,255,255,.5),inset 0 -4px 6px rgba(0,0,0,.12);opacity:.74;transition:transform .45s var(--spring),opacity .2s,box-shadow .3s}
+.tl:hover{transform:translateY(-4px) scale(1.14);opacity:1;z-index:2}
+.tl:focus-visible{outline:3px solid #fff;box-shadow:0 0 0 5px var(--coral);opacity:1;z-index:3}
+.tl.seen{opacity:1}
+.tl.seen:after{content:"★";position:absolute;top:-4px;right:-1px;font-size:12px;color:#ffe27a;text-shadow:0 1px 2px rgba(0,0,0,.5)}
+.tl.sel{opacity:1;transform:scale(1.2);box-shadow:0 0 0 3px #fff,0 0 20px rgba(255,210,94,.95);z-index:4}
+.tl[data-r="n"]{--c1:#7fb8f0;--c2:#4f8fdc}
+.tl[data-r="c"]{--c1:#ffb066;--c2:#e8803a}
+.tl[data-r="e"]{--c1:#7fd49a;--c2:#3fa466}
+.tl[data-r="w"]{--c1:#ff9fb8;--c2:#e8648f}
+.tl[data-r="s"]{--c1:#6ed3cf;--c2:#2f9fa0}
+.tl[data-r="ne"]{--c1:#c3a0ec;--c2:#8a62c7}
+.tl[data-r="ut"]{--c1:#e6cc7a;--c2:#b8962e}
+.minfo{min-height:104px;padding:14px 16px;border-radius:26px;background:rgba(255,255,255,.72);box-shadow:inset 0 2px 6px rgba(200,120,90,.18);max-width:640px;margin:0 auto}
+.minfo .mi0{display:grid;place-items:center;min-height:76px;font-weight:800;color:var(--muted);text-align:center}
+.minfo .mi{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;animation:pop .45s var(--spring) both}
+.minfo .mic{flex:none;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:19px;color:#fff;background:linear-gradient(150deg,var(--c1),var(--c2));box-shadow:0 6px 10px rgba(120,70,50,.25),inset 0 2px 3px rgba(255,255,255,.5)}
+.minfo .mt{flex:1;min-width:200px}
+.minfo h3{font-size:22px;margin-bottom:4px}
+.minfo p{margin:8px 0 0;font-weight:700;font-size:16.5px}
+
+/* facts */
+.fsec{margin:24px 0;padding:22px;border-radius:38px;background:linear-gradient(135deg,#fff6cf,#ffe3a0);display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;overflow:hidden;position:relative}
+.fsec:before,.fsec:after{content:"✦";position:absolute;color:#fff;opacity:.8;animation:twk 3.2s ease-in-out infinite}
+.fsec:before{top:12px;right:22px;font-size:22px}
+.fsec:after{bottom:14px;right:64px;font-size:14px;animation-delay:-1.4s}
+@keyframes twk{0%,100%{transform:scale(.6) rotate(0);opacity:.3}50%{transform:scale(1.2) rotate(40deg);opacity:1}}
+.fic{font-size:clamp(54px,12vw,84px);filter:drop-shadow(0 8px 8px rgba(150,100,20,.3));animation:bob 3s ease-in-out infinite}
+.fsec h3{font-size:20px;color:#8a5a00;letter-spacing:.4px;text-transform:uppercase}
+.ftxt{font-family:var(--display);font-size:clamp(19px,3vw,27px);font-weight:700;color:#5a4300;margin:6px 0 12px;line-height:1.3}
+.fcard.flip .fic,.fcard.flip .ftxt{animation:flipx .5s ease}
+@keyframes flipx{0%{transform:rotateX(0);opacity:1}50%{transform:rotateX(90deg);opacity:0}100%{transform:rotateX(0);opacity:1}}
+@media(max-width:520px){.fsec{grid-template-columns:1fr;text-align:center}.fsec .row{justify-content:center}}
+
+/* badges */
+.bsum{display:flex;gap:16px;align-items:center;flex-wrap:wrap;padding:20px;border-radius:34px;margin:12px 0}
+.bsum .grow{flex:1;min-width:220px}
+.bsum h2{font-size:clamp(26px,4.5vw,38px)}
+.bsum p{margin:4px 0 10px;font-weight:600;color:var(--muted)}
+.bar2{height:12px;border-radius:9px;background:rgba(150,110,100,.2);overflow:hidden;box-shadow:inset 0 2px 4px rgba(120,70,50,.2)}
+.bar2 i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,var(--coral),var(--sun));transition:width .8s var(--spring)}
+.bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin:16px 0}
+.bdg{text-align:center;padding:18px 10px 14px;border-radius:28px;background:var(--clay);box-shadow:var(--clayShadow);transition:transform .5s var(--spring)}
+.bdg:hover{transform:translateY(-6px) rotate(-1deg)}
+.med{width:88px;height:88px;margin:0 auto 10px;border-radius:50%;display:grid;place-items:center;font-size:42px;background:radial-gradient(circle at 30% 25%,#fff,var(--bc) 72%);border:4px solid #fff;box-shadow:inset 0 -7px 12px rgba(0,0,0,.14),0 10px 18px rgba(0,0,0,.18);position:relative}
+.bdg.on .med:before{content:"";position:absolute;inset:-4px;border-radius:50%;background:conic-gradient(from 0deg,transparent,rgba(255,255,255,.9),transparent 35%);animation:spin 4s linear infinite;mask:radial-gradient(circle,transparent 62%,#000 64%);-webkit-mask:radial-gradient(circle,transparent 62%,#000 64%)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.bdg.lock .med{filter:grayscale(1) brightness(1.08);opacity:.5}
+.bdg.lock .med:after{content:"🔒";position:absolute;bottom:-6px;right:-6px;font-size:22px;filter:none}
+.bdg b{display:block;font-family:var(--display);font-size:17px;margin-bottom:2px}
+.bdg small{display:block;color:var(--muted);font-weight:600;font-size:12.5px;line-height:1.35}
+.bdg.next{outline:3px dashed rgba(255,132,112,.6);outline-offset:3px}
+
+/* community */
+.wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:12px}
+.scard{padding:14px 12px;border-radius:26px;background:var(--clay);box-shadow:var(--clayShadow);text-align:center;transition:transform .5s var(--spring);position:relative}
+.scard:hover{transform:translateY(-5px)}
+.scard .av{font-size:46px;line-height:1.1;filter:drop-shadow(0 5px 4px rgba(120,70,40,.25))}
+.scard b{display:block;font-family:var(--display);font-size:18px;margin:2px 0 6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.scard small{display:block;font-weight:700;font-size:12.5px;color:var(--muted);margin-top:6px}
+.scard .mini{font-size:18px;margin-top:4px;min-height:24px;letter-spacing:2px}
+.scard.me{outline:3px solid var(--coral)}
+.youtag{position:absolute;top:8px;right:10px;font-size:11px;font-weight:800;background:var(--coral);color:#fff;border-radius:99px;padding:1px 9px}
+.avpick{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 12px}
+.avb{width:46px;height:46px;border-radius:50%;border:0;font-size:24px;background:#fff;box-shadow:0 4px 8px rgba(200,120,90,.2);transition:transform .4s var(--spring)}
+.avb:hover{transform:scale(1.12)}
+.avb[aria-pressed="true"]{outline:3px solid var(--coral);transform:scale(1.1)}
+.fld{width:100%;border:0;border-radius:18px;padding:12px 16px;font-weight:700;background:#fff;color:var(--ink);font-size:16px;box-shadow:inset 0 3px 6px rgba(200,120,90,.2)}
+.fld:focus{outline:3px solid rgba(255,132,112,.5)}
+textarea.fld{min-height:64px;resize:vertical;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14px}
+.codebox{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.codebox code{flex:1;min-width:180px;background:#fff;border-radius:14px;padding:10px 12px;font-size:12.5px;word-break:break-all;box-shadow:inset 0 2px 5px rgba(200,120,90,.2)}
+details.tsec summary{cursor:pointer;font-family:var(--display);font-size:clamp(22px,3.4vw,28px);font-weight:800;list-style:none;display:flex;align-items:center;gap:10px}
+details.tsec summary::-webkit-details-marker{display:none}
+details.tsec summary:after{content:"▾";margin-left:auto;transition:transform .3s}
+details.tsec[open] summary:after{transform:rotate(180deg)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:14px 0}
+.stat{background:#fff;border-radius:20px;padding:12px;text-align:center;box-shadow:inset 0 2px 6px rgba(200,120,90,.18)}
+.stat b{display:block;font-family:var(--display);font-size:28px;color:var(--terra)}
+.stat span{font-size:12.5px;font-weight:700;color:var(--muted)}
+.insight{background:rgba(213,244,247,.85);color:#1b5d68;border-radius:18px;padding:10px 14px;font-weight:700;font-size:14.5px;margin:8px 0}
+details.stu{background:#fff;border-radius:20px;margin:8px 0;box-shadow:inset 0 2px 6px rgba(200,120,90,.15)}
+details.stu summary{cursor:pointer;padding:10px 14px;display:flex;align-items:center;gap:10px;font-weight:800;list-style:none}
+details.stu summary::-webkit-details-marker{display:none}
+details.stu .sb{padding:4px 14px 14px}
+.stu .sn{flex:none;min-width:120px;display:flex;gap:8px;align-items:center}
+.stu .sbar{flex:1;min-width:60px}
+.stu .sv{font-size:13px;white-space:nowrap;color:var(--muted)}
+.rcg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.rc{font-size:13px;font-weight:700;border-radius:99px;padding:3px 10px;background:rgba(150,110,100,.12);color:var(--muted)}
+.rc.d{background:linear-gradient(180deg,#e4fbef,#bdeed7);color:#0b5c3a}
+#toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 150px);transform:translate(-50%,-24px) scale(.9);opacity:0;pointer-events:none;z-index:80;max-width:min(92vw,460px);text-align:center;padding:12px 22px;border-radius:99px;font-weight:800;font-size:16px;color:#5a3b0a;background:linear-gradient(160deg,#fff0a6,#ffc94d);box-shadow:0 14px 30px rgba(200,140,20,.4),inset 0 2px 4px rgba(255,255,255,.7);transition:transform .5s var(--spring),opacity .3s}
+#toast.show{opacity:1;transform:translate(-50%,0) scale(1)}
 </style>
 </head>
 <body>
@@ -302,8 +413,7 @@ footer .row{justify-content:flex-start;margin-top:10px}
   <label class="lang"><span aria-hidden="true">🌐</span><select id="langSel" aria-label="Language">
     <option value="en">English</option><option value="hi">हिन्दी</option><option value="ta">தமிழ்</option><option value="te">తెలుగు</option><option value="pa">ਪੰਜਾਬੀ</option></select></label>
   <button class="pbtn" id="soundBtn" aria-pressed="true" aria-label="Sound on or off">🔊</button>
-  <button class="pbtn" id="teachBtn" aria-label="Teacher view">🎓<span class="t" style="margin-left:6px" data-i="teacher"></span></button>
-</nav></header>
+</nav><div class="tabs glass" id="tabs" role="tablist" aria-label="Pages"></div></header>
 
 <main class="wrap" id="app"></main>
 
@@ -344,6 +454,7 @@ footer .row{justify-content:flex-start;margin-top:10px}
   <p class="cnote" data-i="cnote"></p>
 </aside>
 <div id="confetti" aria-hidden="true"></div>
+<div id="toast" role="status" aria-live="polite"></div>
 
 <script>
 (function(){
@@ -2061,13 +2172,13 @@ function startGyani(){
 }
 
 function home(){
-  route='home';play=null;stopSpeak();
+  route='home';play=null;stopSpeak();drawTabs();
   var n=doneCount(),all=n===RIGHTS.length;
   app.innerHTML='<div class="view">'+
   '<section class="hero"><div class="txt glass"><div class="kick">'+esc(t('kick'))+'</div><h1>Saksham</h1><div class="tagl">'+esc(t('tagline'))+'</div><p>'+esc(t('heroSub'))+'</p></div>'+
   '<div class="mascot"><div class="say glass" id="gsay" aria-live="polite"></div><div class="owlwrap">'+owl(150)+'</div></div></section>'+
   '<section class="town" id="town" aria-label="Town"><div class="tilt t"></div><div class="tilt b"></div>'+townSVG()+'</section>'+townNav()+
-  '<section class="cards" aria-label="Buildings">'+RIGHTS.map(function(r){var d=progress.done[r.id];return '<button class="card clay" data-open="'+r.id+'"><span class="bar" style="background:'+r.color+'"></span><div class="ic">'+r.icon+'</div><h3>'+esc(T(r.title))+'</h3><p>'+esc(T(r.blurb))+'</p><span class="tag'+(d?' done':'')+'">'+(d?(esc(t('unlocked'))+' '+'⭐'.repeat(d.stars)):esc(t('play')))+'</span></button>'}).join('')+'</section>'+
+  mapHTML()+factHTML()+
   (all?'<section class="cert"><div style="font-size:56px">🏆</div><h2>'+esc(t('certT'))+'</h2><p style="font-weight:700;font-size:18px;margin:6px 0 0">'+esc(t('certTx'))+'</p></section>':'')+
   '<footer class="foot glass">'+esc(t('foot'))+'<div class="row"><button class="btn sm alt" id="share">'+esc(t('share'))+'</button><button class="btn sm alt" id="reset">'+esc(t('reset'))+'</button></div></footer></div>';
   updateGauge();window.scrollTo(0,0);startGyani();
@@ -2082,7 +2193,7 @@ function stage(r,bg,prop,cast,dim){
 function flow(r){return r.steps.concat([{t:'law'},{t:'quiz'}])}
 function startRight(id){
   var r=RIGHTS.filter(function(x){return x.id===id})[0];if(!r)return;
-  route='play';
+  route='play';drawTabs();
   play={r:r,i:0,pick:null,qi:0,correct:0,sel:null,qs:r.quiz.map(function(q){return {q:q.q,o:shuffle(q.o.map(function(x,i){return {t:x,ok:i===q.a}}))}})};
   sfx('whoosh');renderStep();
 }
@@ -2111,7 +2222,7 @@ function renderStep(){
 }
 function renderResult(){
   var r=play.r,n=play.correct,total=play.qs.length,stars=n===total?3:(n>=2?2:1),prev=progress.done[r.id];
-  progress.done[r.id]={stars:Math.max(stars,prev?prev.stars:0)};saveJ(KEY,progress);updateGauge();
+  progress.done[r.id]={stars:Math.max(stars,prev?prev.stars:0)};saveJ(KEY,progress);updateGauge();syncMe();checkBadges(true);
   var all=doneCount()===RIGHTS.length;
   app.innerHTML='<div class="view">'+ptop()+'<div class="big clay"><div class="stars">'+'⭐'.repeat(stars)+'☆'.repeat(3-stars)+'</div><h2>'+esc(t('unlockedT',{p:T(r.place)}))+'</h2><p style="font-weight:700;font-size:18px">'+esc(t('got',{a:n,b:total}))+' '+esc(t(stars===3?'perfect':'goodE'))+'</p><p class="fine">'+esc(t('rem'))+' '+esc(T(r.law.remember))+' '+esc(t('callAny'))+'</p><div class="row" style="justify-content:center;margin-top:14px"><button class="btn alt" id="again">'+esc(t('again'))+'</button><button class="btn sun" id="back2">'+esc(all?t('certBtn'):t('backTown'))+'</button></div></div></div>';
   window.scrollTo(0,0);confetti();sfx('win');
@@ -2119,7 +2230,7 @@ function renderResult(){
 
 /* teacher view */
 function teacher(){
-  route='teacher';play=null;stopSpeak();clearInterval(typeTimer);clearTimeout(tipTimer);
+  route='teacher';play=null;stopSpeak();clearInterval(typeTimer);clearTimeout(tipTimer);drawTabs();
   var h='<div class="view'+(showKey?' showkey':'')+'" id="tv"><div class="tsec glass" style="border-radius:34px"><h2 style="font-size:clamp(28px,5vw,40px)">🎓 '+esc(t('tTitle'))+'</h2><p style="font-weight:600;margin:6px 0 12px">'+esc(t('tIntro'))+'</p><div class="row noprint" style="justify-content:flex-start"><button class="btn sm sun" id="keyBtn">'+esc(t(showKey?'tHideKey':'tKey'))+'</button><button class="btn sm alt" id="projBtn">'+esc(t('tProj'))+'</button><button class="btn sm alt" id="printBtn">'+esc(t('tPrint'))+'</button><button class="btn sm alt" id="back">'+esc(t('back'))+'</button></div></div>';
   RIGHTS.forEach(function(r){
     var d=progress.done[r.id];
@@ -2133,7 +2244,7 @@ function teacher(){
   app.innerHTML=h;window.scrollTo(0,0);
 }
 
-function rerender(){if(route==='home')home();else if(route==='teacher')teacher();else if(play)renderStep();else home()}
+function rerender(){if(route==='home')home();else if(route==='teacher')teacher();else if(route==='community')community();else if(route==='badges')badges();else if(play)renderStep();else home();drawTabs()}
 
 function confetti(){var box=$('#confetti'),cols=['#ff8470','#ffd25e','#7fc8f0','#ffb8ae','#8ad49a','#f2b43c'];for(var i=0;i<70;i++){var p=document.createElement('i');p.style.cssText='left:'+(Math.random()*100)+'%;background:'+cols[i%cols.length]+';animation-duration:'+(2.5+Math.random()*2.5)+'s;animation-delay:'+(Math.random()*.6)+'s;transform:rotate('+(Math.random()*360)+'deg)';box.appendChild(p)}setTimeout(function(){box.innerHTML=''},6500)}
 
@@ -2145,17 +2256,361 @@ function applyStatic(){
   $('#langSel').value=lang;
 }
 function setLang(l,silent){
-  lang=l;prefs.lang=l;saveJ(PREF,prefs);applyStatic();
+  lang=l;prefs.lang=l;saveJ(PREF,prefs);social.langs[l]=1;saveSocial();applyStatic();
   if($('#msgs')&&$('#msgs').dataset.started){}
-  chatRefreshChips();rerender();
+  chatRefreshChips();rerender();checkBadges(true);
   if(!silent)sfx('pop');
 }
 
 /* =============== PANELS =============== */
 function showPanel(el){el.hidden=false;requestAnimationFrame(function(){requestAnimationFrame(function(){el.classList.add('open')})})}
 function hidePanel(el,cb){el.classList.remove('open');setTimeout(function(){el.hidden=true;if(cb)cb()},320)}
-function openHelp(){sfx('pop');showPanel($('#help'));setTimeout(function(){$('#helpX').focus()},120)}
+function openHelp(){sfx('pop');social.flags.help=1;saveSocial();checkBadges(true);showPanel($('#help'));setTimeout(function(){$('#helpX').focus()},120)}
 function closeHelp(){hidePanel($('#help'),function(){$('#helpFab').focus()})}
+
+/* =============== v3: TABS · MAP · FACTS · COMMUNITY · BADGES =============== */
+/* Everything here stays on the device (localStorage). Nothing is sent anywhere. */
+var SKEY='saksham_social_v1';
+var social=loadJ(SKEY,{});
+social.me=social.me||null;
+social.roster=Array.isArray(social.roster)?social.roster:[];
+social.facts=social.facts||{};social.tiles=social.tiles||{};social.langs=social.langs||{};
+social.flags=social.flags||{};social.badges=social.badges||{};
+function saveSocial(){saveJ(SKEY,social)}
+var L3=function(en,hi,pa){return L(en,hi,undefined,undefined,pa)};
+function cnt(o){return Object.keys(o).length}
+
+/* ---- UI strings (Tamil / Telugu fall back to English where not given) ---- */
+var UX={
+ tabHome:L('Home','होम','முகப்பு','హోమ్','ਘਰ'),
+ tabComm:L('Community','समुदाय','சமூகம்','సమాజం','ਭਾਈਚਾਰਾ'),
+ tabBadge:L('Badges','बैज','பேட்ஜ்கள்','బ్యాడ్జీలు','ਬੈਜ'),
+ tabTeach:L('Teachers','शिक्षक','ஆசிரியர்','ఉపాధ్యాయులు','ਅਧਿਆਪਕ'),
+ mapT:L('Rights across India','पूरे भारत में अधिकार','இந்தியா முழுவதும் உரிமைகள்','భారతదేశమంతటా హక్కులు','ਪੂਰੇ ਭਾਰਤ ਵਿੱਚ ਅਧਿਕਾਰ'),
+ mapSub:L3('Tap a tile to discover a fact. Every tile is a state or union territory.','किसी टाइल को छुओ और एक तथ्य जानो। हर टाइल एक राज्य या केंद्र शासित प्रदेश है।','ਕਿਸੇ ਟਾਈਲ ਨੂੰ ਛੂਹੋ ਅਤੇ ਇੱਕ ਤੱਥ ਜਾਣੋ। ਹਰ ਟਾਈਲ ਇੱਕ ਰਾਜ ਜਾਂ ਕੇਂਦਰ ਸ਼ਾਸਤ ਪ੍ਰਦੇਸ਼ ਹੈ।'),
+ mapExp:L('Explored {a} of {b}','{b} में से {a} देखे','{b}-ல் {a} பார்த்தாய்','{b}లో {a} చూశావు','{b} ਵਿੱਚੋਂ {a} ਵੇਖੇ'),
+ mapTap:L3('Tap any tile to discover a fact','कोई भी टाइल छुओ और तथ्य जानो','ਕੋਈ ਵੀ ਟਾਈਲ ਛੂਹੋ ਅਤੇ ਤੱਥ ਜਾਣੋ'),
+ tagState:L3('State story','राज्य की कहानी','ਰਾਜ ਦੀ ਕਹਾਣੀ'),
+ tagIndia:L3('Across India','पूरे भारत में','ਪੂਰੇ ਭਾਰਤ ਵਿੱਚ'),
+ mapNote:L3('A tile map: every state and union territory is drawn the same size, so no place looks bigger or smaller than another.','टाइल मानचित्र: हर राज्य और केंद्र शासित प्रदेश एक ही आकार का है, इसलिए कोई जगह बड़ी या छोटी नहीं दिखती।','ਟਾਈਲ ਨਕਸ਼ਾ: ਹਰ ਰਾਜ ਅਤੇ ਕੇਂਦਰ ਸ਼ਾਸਤ ਪ੍ਰਦੇਸ਼ ਇੱਕੋ ਆਕਾਰ ਦਾ ਹੈ, ਇਸ ਲਈ ਕੋਈ ਥਾਂ ਵੱਡੀ ਜਾਂ ਛੋਟੀ ਨਹੀਂ ਲੱਗਦੀ।'),
+ factT:L('Did you know?','क्या तुम जानते हो?','உனக்குத் தெரியுமா?','నీకు తెలుసా?','ਕੀ ਤੁਹਾਨੂੰ ਪਤਾ ਹੈ?'),
+ factBtn:L('🎲 Surprise me','🎲 कुछ नया बताओ','🎲 ஆச்சரியம் காட்டு','🎲 ఆశ్చర్యపరచు','🎲 ਕੁਝ ਨਵਾਂ ਦੱਸੋ'),
+ factSeen:L3('Facts found: {a} of {b}','मिले तथ्य: {b} में से {a}','ਮਿਲੇ ਤੱਥ: {b} ਵਿੱਚੋਂ {a}'),
+ commT:L3('Our class','हमारी कक्षा','ਸਾਡੀ ਜਮਾਤ'),
+ commSub:L3('Meet the rights champions. Nicknames only, never real names.','अधिकारों के चैंपियनों से मिलो। सिर्फ़ उपनाम, असली नाम कभी नहीं।','ਹੱਕਾਂ ਦੇ ਚੈਂਪੀਅਨਾਂ ਨੂੰ ਮਿਲੋ। ਸਿਰਫ਼ ਉਪਨਾਮ, ਅਸਲੀ ਨਾਮ ਕਦੇ ਨਹੀਂ।'),
+ youT:L3('Your champion card','तुम्हारा चैंपियन कार्ड','ਤੁਹਾਡਾ ਚੈਂਪੀਅਨ ਕਾਰਡ'),
+ nickPh:L3('Pick a nickname','एक उपनाम चुनो','ਇੱਕ ਉਪਨਾਮ ਚੁਣੋ'),
+ nickHelp:L3('Use a nickname. Never share your full name, school, phone number or address.','उपनाम रखो। अपना पूरा नाम, स्कूल, फ़ोन नंबर या पता कभी न बताओ।','ਉਪਨਾਮ ਰੱਖੋ। ਆਪਣਾ ਪੂਰਾ ਨਾਮ, ਸਕੂਲ, ਫ਼ੋਨ ਨੰਬਰ ਜਾਂ ਪਤਾ ਕਦੇ ਨਾ ਦੱਸੋ।'),
+ nickBad:L3('Please use a nickname without numbers like a phone number.','कृपया फ़ोन नंबर जैसे अंकों के बिना उपनाम रखो।','ਕਿਰਪਾ ਕਰਕੇ ਫ਼ੋਨ ਨੰਬਰ ਵਰਗੇ ਅੰਕਾਂ ਤੋਂ ਬਿਨਾਂ ਉਪਨਾਮ ਰੱਖੋ।'),
+ nickEmpty:L3('Type a nickname first.','पहले एक उपनाम लिखो।','ਪਹਿਲਾਂ ਇੱਕ ਉਪਨਾਮ ਲਿਖੋ।'),
+ avT:L3('Choose your face','अपना चेहरा चुनो','ਆਪਣਾ ਚਿਹਰਾ ਚੁਣੋ'),
+ saveMe:L3('Save my card','मेरा कार्ड सहेजो','ਮੇਰਾ ਕਾਰਡ ਸੰਭਾਲੋ'),
+ savedOk:L3('Saved ✔','सहेज लिया ✔','ਸੰਭਾਲ ਲਿਆ ✔'),
+ codeT:L3('My progress code','मेरा प्रगति कोड','ਮੇਰਾ ਪ੍ਰਗਤੀ ਕੋਡ'),
+ codeHelp:L3('Give this code to your teacher so they can see your progress.','अपनी प्रगति दिखाने के लिए यह कोड अपने शिक्षक को दो।','ਆਪਣੀ ਪ੍ਰਗਤੀ ਦਿਖਾਉਣ ਲਈ ਇਹ ਕੋਡ ਆਪਣੇ ਅਧਿਆਪਕ ਨੂੰ ਦਿਓ।'),
+ copyCode:L3('📋 Copy code','📋 कोड कॉपी करो','📋 ਕੋਡ ਕਾਪੀ ਕਰੋ'),
+ wallT:L3('Class wall','कक्षा की दीवार','ਜਮਾਤ ਦੀ ਕੰਧ'),
+ wallEmpty:L3('No classmates here yet. Save your card, or ask a teacher to add the class.','यहाँ अभी कोई सहपाठी नहीं है। अपना कार्ड सहेजो, या शिक्षक से कक्षा जुड़वाओ।','ਇੱਥੇ ਅਜੇ ਕੋਈ ਸਹਿਪਾਠੀ ਨਹੀਂ ਹੈ। ਆਪਣਾ ਕਾਰਡ ਸੰਭਾਲੋ, ਜਾਂ ਅਧਿਆਪਕ ਤੋਂ ਜਮਾਤ ਜੋੜਨ ਲਈ ਕਹੋ।'),
+ you:L3('You','तुम','ਤੁਸੀਂ'),
+ ttT:L3('Teacher tools','शिक्षक उपकरण','ਅਧਿਆਪਕ ਸੰਦ'),
+ ttNote:L3('Saksham keeps everything on the device it is opened on and collects nothing online. To see students from other devices, ask them to share their progress code and paste it here. These tools are a classroom helper and are not password protected.','सक्षम सब कुछ उसी डिवाइस पर रखता है जिस पर वह खुला है और ऑनलाइन कुछ इकट्ठा नहीं करता। दूसरे डिवाइस के छात्रों को देखने के लिए उनसे प्रगति कोड लेकर यहाँ चिपकाएँ। ये उपकरण कक्षा की मदद के लिए हैं और पासवर्ड से सुरक्षित नहीं हैं।','ਸਕਸ਼ਮ ਸਭ ਕੁਝ ਉਸੇ ਡਿਵਾਈਸ ਉੱਤੇ ਰੱਖਦਾ ਹੈ ਜਿਸ ਉੱਤੇ ਇਹ ਖੁੱਲ੍ਹਿਆ ਹੈ ਅਤੇ ਆਨਲਾਈਨ ਕੁਝ ਇਕੱਠਾ ਨਹੀਂ ਕਰਦਾ। ਹੋਰ ਡਿਵਾਈਸਾਂ ਦੇ ਵਿਦਿਆਰਥੀਆਂ ਨੂੰ ਵੇਖਣ ਲਈ ਉਨ੍ਹਾਂ ਤੋਂ ਪ੍ਰਗਤੀ ਕੋਡ ਲੈ ਕੇ ਇੱਥੇ ਪੇਸਟ ਕਰੋ। ਇਹ ਸੰਦ ਜਮਾਤ ਦੀ ਮਦਦ ਲਈ ਹਨ ਅਤੇ ਪਾਸਵਰਡ ਨਾਲ ਸੁਰੱਖਿਅਤ ਨਹੀਂ ਹਨ।'),
+ addCode:L3('Paste a student code','छात्र का कोड चिपकाएँ','ਵਿਦਿਆਰਥੀ ਦਾ ਕੋਡ ਪੇਸਟ ਕਰੋ'),
+ addBtn:L3('Add student','छात्र जोड़ें','ਵਿਦਿਆਰਥੀ ਜੋੜੋ'),
+ badCode:L3('That code did not work. Check it and try again.','वह कोड काम नहीं किया। जाँचकर फिर कोशिश करें।','ਉਹ ਕੋਡ ਕੰਮ ਨਹੀਂ ਕੀਤਾ। ਜਾਂਚ ਕੇ ਮੁੜ ਕੋਸ਼ਿਸ਼ ਕਰੋ।'),
+ addedOk:L3('Student added ✔','छात्र जोड़ा गया ✔','ਵਿਦਿਆਰਥੀ ਜੋੜਿਆ ਗਿਆ ✔'),
+ csvBtn:L3('⬇ Download class list (CSV)','⬇ कक्षा की सूची डाउनलोड करें (CSV)','⬇ ਜਮਾਤ ਦੀ ਸੂਚੀ ਡਾਊਨਲੋਡ ਕਰੋ (CSV)'),
+ demoOn:L3('Load demo class','डेमो कक्षा लोड करें','ਡੈਮੋ ਜਮਾਤ ਲੋਡ ਕਰੋ'),
+ demoOff:L3('Remove demo students','डेमो छात्र हटाएँ','ਡੈਮੋ ਵਿਦਿਆਰਥੀ ਹਟਾਓ'),
+ rm:L3('Remove','हटाएँ','ਹਟਾਓ'),
+ stStud:L3('Students','छात्र','ਵਿਦਿਆਰਥੀ'),
+ stAvg:L3('Avg. rights done','औसत पूरे अधिकार','ਔਸਤ ਪੂਰੇ ਹੱਕ'),
+ stStars:L3('Total stars','कुल सितारे','ਕੁੱਲ ਤਾਰੇ'),
+ stMost:L3('Most completed','सबसे ज़्यादा पूरा','ਸਭ ਤੋਂ ਵੱਧ ਪੂਰਾ'),
+ stLeast:L3('Least completed, good for a class discussion','सबसे कम पूरा, कक्षा में चर्चा के लिए अच्छा','ਸਭ ਤੋਂ ਘੱਟ ਪੂਰਾ, ਜਮਾਤ ਵਿੱਚ ਚਰਚਾ ਲਈ ਚੰਗਾ'),
+ ttEmpty:L3('No students yet. Add a code, or load the demo class to see how this works.','अभी कोई छात्र नहीं। कोड जोड़ें, या डेमो कक्षा लोड करके देखें।','ਅਜੇ ਕੋਈ ਵਿਦਿਆਰਥੀ ਨਹੀਂ। ਕੋਡ ਜੋੜੋ, ਜਾਂ ਡੈਮੋ ਜਮਾਤ ਲੋਡ ਕਰਕੇ ਵੇਖੋ।'),
+ badgeT:L3('Your badges','तुम्हारे बैज','ਤੁਹਾਡੇ ਬੈਜ'),
+ badgeSub:L3('Earn badges by learning, exploring and asking for help when you need it.','सीखकर, खोजकर और ज़रूरत पर मदद माँगकर बैज कमाओ।','ਸਿੱਖ ਕੇ, ਖੋਜ ਕੇ ਅਤੇ ਲੋੜ ਪੈਣ ਤੇ ਮਦਦ ਮੰਗ ਕੇ ਬੈਜ ਕਮਾਓ।'),
+ badgeCount:L3('{a} of {b} earned','{b} में से {a} मिले','{b} ਵਿੱਚੋਂ {a} ਮਿਲੇ'),
+ badgeNext:L3('Next up:','अगला:','ਅਗਲਾ:'),
+ newBadge:L3('New badge: {b}','नया बैज: {b}','ਨਵਾਂ ਬੈਜ: {b}')
+};
+for(var uxk in UX)UI[uxk]=UX[uxk];
+
+/* ---- Did-you-know facts (all checked against the laws and programmes in the game) ---- */
+var FACTS=[
+ {i:'📘',t:L3("Article 21A of the Constitution makes free education a fundamental right for every child aged 6 to 14.",'संविधान का अनुच्छेद 21A 6 से 14 साल के हर बच्चे को मुफ़्त शिक्षा का मौलिक अधिकार देता है।','ਸੰਵਿਧਾਨ ਦੀ ਧਾਰਾ 21A 6 ਤੋਂ 14 ਸਾਲ ਦੇ ਹਰ ਬੱਚੇ ਨੂੰ ਮੁਫ਼ਤ ਸਿੱਖਿਆ ਦਾ ਮੌਲਿਕ ਹੱਕ ਦਿੰਦੀ ਹੈ।')},
+ {i:'📅',t:L3("The Right to Education Act came into force on 1 April 2010.",'शिक्षा का अधिकार क़ानून 1 अप्रैल 2010 से लागू हुआ।','ਸਿੱਖਿਆ ਦਾ ਅਧਿਕਾਰ ਕਾਨੂੰਨ 1 ਅਪ੍ਰੈਲ 2010 ਤੋਂ ਲਾਗੂ ਹੋਇਆ।')},
+ {i:'📞',t:L3("Childline 1098 is free and answers 24 hours a day, every day.",'चाइल्डलाइन 1098 मुफ़्त है और हर दिन 24 घंटे जवाब देती है।','ਚਾਈਲਡਲਾਈਨ 1098 ਮੁਫ਼ਤ ਹੈ ਅਤੇ ਹਰ ਦਿਨ 24 ਘੰਟੇ ਜਵਾਬ ਦਿੰਦੀ ਹੈ।')},
+ {i:'🛡️',t:L3("The POCSO Act of 2012 protects every child under 18, boys and girls. It is never the child's fault.",'POCSO क़ानून 2012 हर 18 साल से छोटे बच्चे की सुरक्षा करता है, लड़कों और लड़कियों दोनों की। इसमें बच्चे की कभी ग़लती नहीं होती।','POCSO ਕਾਨੂੰਨ 2012 ਹਰ 18 ਸਾਲ ਤੋਂ ਛੋਟੇ ਬੱਚੇ ਦੀ ਸੁਰੱਖਿਆ ਕਰਦਾ ਹੈ, ਮੁੰਡਿਆਂ ਅਤੇ ਕੁੜੀਆਂ ਦੋਵਾਂ ਦੀ। ਇਸ ਵਿੱਚ ਬੱਚੇ ਦੀ ਕਦੇ ਗ਼ਲਤੀ ਨਹੀਂ ਹੁੰਦੀ।')},
+ {i:'💍',t:L3("The legal age to marry in India is 18 for girls and 21 for boys.",'भारत में शादी की क़ानूनी उम्र लड़कियों के लिए 18 और लड़कों के लिए 21 साल है।','ਭਾਰਤ ਵਿੱਚ ਵਿਆਹ ਦੀ ਕਾਨੂੰਨੀ ਉਮਰ ਕੁੜੀਆਂ ਲਈ 18 ਅਤੇ ਮੁੰਡਿਆਂ ਲਈ 21 ਸਾਲ ਹੈ।')},
+ {i:'🚫',t:L3("Children under 14 cannot be employed in any job, and teens under 18 cannot do dangerous work.",'14 साल से छोटे बच्चों को किसी भी काम पर नहीं रखा जा सकता, और 18 साल से छोटे किशोर ख़तरनाक काम नहीं कर सकते।','14 ਸਾਲ ਤੋਂ ਛੋਟੇ ਬੱਚਿਆਂ ਨੂੰ ਕਿਸੇ ਵੀ ਕੰਮ ਤੇ ਨਹੀਂ ਰੱਖਿਆ ਜਾ ਸਕਦਾ, ਅਤੇ 18 ਸਾਲ ਤੋਂ ਛੋਟੇ ਕਿਸ਼ੋਰ ਖ਼ਤਰਨਾਕ ਕੰਮ ਨਹੀਂ ਕਰ ਸਕਦੇ।')},
+ {i:'🌍',t:L3("12 June is World Day Against Child Labour.",'12 जून विश्व बाल श्रम निषेध दिवस है।','12 ਜੂਨ ਵਿਸ਼ਵ ਬਾਲ ਮਜ਼ਦੂਰੀ ਵਿਰੋਧੀ ਦਿਵਸ ਹੈ।')},
+ {i:'🎈',t:L3("India celebrates Children's Day on 14 November, the birthday of Jawaharlal Nehru.",'भारत में 14 नवंबर को बाल दिवस मनाया जाता है, जो जवाहरलाल नेहरू का जन्मदिन है।','ਭਾਰਤ ਵਿੱਚ 14 ਨਵੰਬਰ ਨੂੰ ਬਾਲ ਦਿਵਸ ਮਨਾਇਆ ਜਾਂਦਾ ਹੈ, ਜੋ ਜਵਾਹਰਲਾਲ ਨਹਿਰੂ ਦਾ ਜਨਮ ਦਿਨ ਹੈ।')},
+ {i:'🌐',t:L3("The UN Convention on the Rights of the Child was adopted on 20 November 1989, and India agreed to follow it in 1992.",'बाल अधिकारों पर संयुक्त राष्ट्र कन्वेंशन 20 नवंबर 1989 को अपनाया गया, और भारत ने 1992 में इसे मानने की सहमति दी।','ਬਾਲ ਅਧਿਕਾਰਾਂ ਬਾਰੇ ਸੰਯੁਕਤ ਰਾਸ਼ਟਰ ਕਨਵੈਨਸ਼ਨ 20 ਨਵੰਬਰ 1989 ਨੂੰ ਅਪਣਾਈ ਗਈ, ਅਤੇ ਭਾਰਤ ਨੇ 1992 ਵਿੱਚ ਇਸਨੂੰ ਮੰਨਣ ਦੀ ਸਹਿਮਤੀ ਦਿੱਤੀ।')},
+ {i:'🏅',t:L3("Kailash Satyarthi, who has worked to free children from labour, shared the 2014 Nobel Peace Prize with Malala Yousafzai.",'बच्चों को मज़दूरी से मुक्त कराने वाले कैलाश सत्यार्थी ने 2014 का नोबेल शांति पुरस्कार मलाला यूसुफ़ज़ई के साथ साझा किया।','ਬੱਚਿਆਂ ਨੂੰ ਮਜ਼ਦੂਰੀ ਤੋਂ ਛੁਡਾਉਣ ਲਈ ਕੰਮ ਕਰਨ ਵਾਲੇ ਕੈਲਾਸ਼ ਸਤਿਆਰਥੀ ਨੇ 2014 ਦਾ ਨੋਬਲ ਸ਼ਾਂਤੀ ਪੁਰਸਕਾਰ ਮਲਾਲਾ ਯੂਸਫ਼ਜ਼ਈ ਨਾਲ ਸਾਂਝਾ ਕੀਤਾ।')},
+ {i:'🪪',t:L3("A birth certificate proves your age. That helps protect you from child marriage and child labour.",'जन्म प्रमाणपत्र आपकी उम्र साबित करता है। इससे बाल विवाह और बाल मज़दूरी से बचाव में मदद मिलती है।','ਜਨਮ ਸਰਟੀਫ਼ਿਕੇਟ ਤੁਹਾਡੀ ਉਮਰ ਸਾਬਤ ਕਰਦਾ ਹੈ। ਇਹ ਬਾਲ ਵਿਆਹ ਅਤੇ ਬਾਲ ਮਜ਼ਦੂਰੀ ਤੋਂ ਬਚਾਅ ਵਿੱਚ ਮਦਦ ਕਰਦਾ ਹੈ।')},
+ {i:'⚖️',t:L3("Free legal help is available for children through NALSA. Call 15100.",'NALSA के ज़रिए बच्चों को मुफ़्त क़ानूनी मदद मिलती है। 15100 पर फ़ोन करें।','NALSA ਰਾਹੀਂ ਬੱਚਿਆਂ ਨੂੰ ਮੁਫ਼ਤ ਕਾਨੂੰਨੀ ਮਦਦ ਮਿਲਦੀ ਹੈ। 15100 ਤੇ ਫ਼ੋਨ ਕਰੋ।')},
+ {i:'🏫',t:L3("Under the RTE Act, private schools must keep 25% of their entry-level seats free for children from poorer families.",'RTE क़ानून के तहत निजी स्कूलों को प्रवेश कक्षा की 25% सीटें ग़रीब परिवारों के बच्चों के लिए मुफ़्त रखनी होती हैं।','RTE ਕਾਨੂੰਨ ਅਧੀਨ ਪ੍ਰਾਈਵੇਟ ਸਕੂਲਾਂ ਨੂੰ ਦਾਖ਼ਲਾ ਜਮਾਤ ਦੀਆਂ 25% ਸੀਟਾਂ ਗ਼ਰੀਬ ਪਰਿਵਾਰਾਂ ਦੇ ਬੱਚਿਆਂ ਲਈ ਮੁਫ਼ਤ ਰੱਖਣੀਆਂ ਪੈਂਦੀਆਂ ਹਨ।')},
+ {i:'🍛',t:L3("The school meal programme, now called PM POSHAN, is one of the largest in the world.",'स्कूलों में भोजन की योजना, जिसे अब PM पोषण कहते हैं, दुनिया की सबसे बड़ी योजनाओं में से एक है।','ਸਕੂਲਾਂ ਵਿੱਚ ਭੋਜਨ ਦੀ ਯੋਜਨਾ, ਜਿਸਨੂੰ ਹੁਣ PM ਪੋਸ਼ਣ ਕਹਿੰਦੇ ਹਨ, ਦੁਨੀਆ ਦੀਆਂ ਸਭ ਤੋਂ ਵੱਡੀਆਂ ਯੋਜਨਾਵਾਂ ਵਿੱਚੋਂ ਇੱਕ ਹੈ।')},
+ {i:'🏭',t:L3("Article 24 of the Constitution says no child below 14 may work in a factory, a mine or any dangerous job.",'संविधान का अनुच्छेद 24 कहता है कि 14 साल से छोटा कोई बच्चा कारख़ाने, खदान या किसी ख़तरनाक काम में नहीं लगाया जा सकता।','ਸੰਵਿਧਾਨ ਦੀ ਧਾਰਾ 24 ਕਹਿੰਦੀ ਹੈ ਕਿ 14 ਸਾਲ ਤੋਂ ਛੋਟਾ ਕੋਈ ਬੱਚਾ ਕਾਰਖ਼ਾਨੇ, ਖਾਣ ਜਾਂ ਕਿਸੇ ਖ਼ਤਰਨਾਕ ਕੰਮ ਵਿੱਚ ਨਹੀਂ ਲਾਇਆ ਜਾ ਸਕਦਾ।')}
+];
+
+/* ---- Tile map of India: x,y grid position, region, names. A tile map draws every
+   state and UT the same size, so no real borders are drawn and nothing is mis-drawn. ---- */
+var TILES=[
+ ['JK',2,0,'n',L3('Jammu & Kashmir','जम्मू और कश्मीर','ਜੰਮੂ ਅਤੇ ਕਸ਼ਮੀਰ')],
+ ['LA',3,0,'n',L3('Ladakh','लद्दाख','ਲੱਦਾਖ')],
+ ['CH',1,1,'n',L3('Chandigarh','चंडीगढ़','ਚੰਡੀਗੜ੍ਹ')],
+ ['PB',2,1,'n',L3('Punjab','पंजाब','ਪੰਜਾਬ')],
+ ['HP',3,1,'n',L3('Himachal Pradesh','हिमाचल प्रदेश','ਹਿਮਾਚਲ ਪ੍ਰਦੇਸ਼')],
+ ['UK',4,1,'n',L3('Uttarakhand','उत्तराखंड','ਉੱਤਰਾਖੰਡ')],
+ ['SK',6,1,'ne',L3('Sikkim','सिक्किम','ਸਿੱਕਮ')],
+ ['AR',8,1,'ne',L3('Arunachal Pradesh','अरुणाचल प्रदेश','ਅਰੁਣਾਚਲ ਪ੍ਰਦੇਸ਼')],
+ ['RJ',1,2,'w',L3('Rajasthan','राजस्थान','ਰਾਜਸਥਾਨ')],
+ ['HR',2,2,'n',L3('Haryana','हरियाणा','ਹਰਿਆਣਾ')],
+ ['DL',3,2,'n',L3('Delhi','दिल्ली','ਦਿੱਲੀ')],
+ ['UP',4,2,'c',L3('Uttar Pradesh','उत्तर प्रदेश','ਉੱਤਰ ਪ੍ਰਦੇਸ਼')],
+ ['BR',5,2,'e',L3('Bihar','बिहार','ਬਿਹਾਰ')],
+ ['WB',6,2,'e',L3('West Bengal','पश्चिम बंगाल','ਪੱਛਮੀ ਬੰਗਾਲ')],
+ ['AS',7,2,'ne',L3('Assam','असम','ਅਸਾਮ')],
+ ['NL',8,2,'ne',L3('Nagaland','नगालैंड','ਨਾਗਾਲੈਂਡ')],
+ ['GJ',2,3,'w',L3('Gujarat','गुजरात','ਗੁਜਰਾਤ')],
+ ['MP',3,3,'c',L3('Madhya Pradesh','मध्य प्रदेश','ਮੱਧ ਪ੍ਰਦੇਸ਼')],
+ ['CG',4,3,'c',L3('Chhattisgarh','छत्तीसगढ़','ਛੱਤੀਸਗੜ੍ਹ')],
+ ['JH',5,3,'e',L3('Jharkhand','झारखंड','ਝਾਰਖੰਡ')],
+ ['OD',6,3,'e',L3('Odisha','ओडिशा','ਓਡੀਸ਼ਾ')],
+ ['ML',7,3,'ne',L3('Meghalaya','मेघालय','ਮੇਘਾਲਿਆ')],
+ ['MN',8,3,'ne',L3('Manipur','मणिपुर','ਮਣੀਪੁਰ')],
+ ['DD',2,4,'ut',L3('Dadra & Nagar Haveli and Daman & Diu','दादरा और नगर हवेली व दमन और दीव','ਦਾਦਰਾ ਅਤੇ ਨਗਰ ਹਵੇਲੀ ਤੇ ਦਮਨ ਅਤੇ ਦੀਵ')],
+ ['MH',3,4,'w',L3('Maharashtra','महाराष्ट्र','ਮਹਾਰਾਸ਼ਟਰ')],
+ ['TS',4,4,'s',L3('Telangana','तेलंगाना','ਤੇਲੰਗਾਨਾ')],
+ ['TR',7,4,'ne',L3('Tripura','त्रिपुरा','ਤ੍ਰਿਪੁਰਾ')],
+ ['MZ',8,4,'ne',L3('Mizoram','मिज़ोरम','ਮਿਜ਼ੋਰਮ')],
+ ['GA',3,5,'w',L3('Goa','गोवा','ਗੋਆ')],
+ ['KA',4,5,'s',L3('Karnataka','कर्नाटक','ਕਰਨਾਟਕ')],
+ ['AP',5,5,'s',L3('Andhra Pradesh','आंध्र प्रदेश','ਆਂਧਰਾ ਪ੍ਰਦੇਸ਼')],
+ ['LD',2,6,'ut',L3('Lakshadweep','लक्षद्वीप','ਲਕਸ਼ਦੀਪ')],
+ ['KL',4,6,'s',L3('Kerala','केरल','ਕੇਰਲ')],
+ ['TN',5,6,'s',L3('Tamil Nadu','तमिलनाडु','ਤਾਮਿਲ ਨਾਡੂ')],
+ ['PY',6,6,'ut',L3('Puducherry','पुदुचेरी','ਪੁਡੂਚੇਰੀ')],
+ ['AN',8,6,'ut',L3('Andaman & Nicobar Islands','अंडमान और निकोबार द्वीप समूह','ਅੰਡਮਾਨ ਅਤੇ ਨਿਕੋਬਾਰ ਟਾਪੂ')]
+];
+/* state stories; tiles without one show an all-India fact instead */
+var TFACT={
+ KL:L3("Kerala has the highest literacy rate among Indian states, a sign of what happens when schools reach every child.",'केरल की साक्षरता दर भारतीय राज्यों में सबसे ज़्यादा है, जो दिखाता है कि जब स्कूल हर बच्चे तक पहुँचते हैं तो क्या होता है।','ਕੇਰਲ ਦੀ ਸਾਖਰਤਾ ਦਰ ਭਾਰਤੀ ਰਾਜਾਂ ਵਿੱਚ ਸਭ ਤੋਂ ਵੱਧ ਹੈ, ਜੋ ਦਿਖਾਉਂਦੀ ਹੈ ਕਿ ਜਦੋਂ ਸਕੂਲ ਹਰ ਬੱਚੇ ਤੱਕ ਪਹੁੰਚਦੇ ਹਨ ਤਾਂ ਕੀ ਹੁੰਦਾ ਹੈ।'),
+ TN:L3("Tamil Nadu was a pioneer of school meals for children, and it later added free breakfast in government primary schools.",'तमिलनाडु बच्चों के लिए स्कूल में भोजन शुरू करने वाले अग्रणी राज्यों में रहा, और बाद में सरकारी प्राथमिक स्कूलों में मुफ़्त नाश्ता भी जोड़ा।','ਤਾਮਿਲ ਨਾਡੂ ਬੱਚਿਆਂ ਲਈ ਸਕੂਲੀ ਭੋਜਨ ਸ਼ੁਰੂ ਕਰਨ ਵਾਲੇ ਮੋਹਰੀ ਰਾਜਾਂ ਵਿੱਚੋਂ ਸੀ, ਅਤੇ ਬਾਅਦ ਵਿੱਚ ਸਰਕਾਰੀ ਪ੍ਰਾਇਮਰੀ ਸਕੂਲਾਂ ਵਿੱਚ ਮੁਫ਼ਤ ਨਾਸ਼ਤਾ ਵੀ ਜੋੜਿਆ।'),
+ MP:L3("Kailash Satyarthi, who shared the 2014 Nobel Peace Prize, was born in Vidisha, Madhya Pradesh.",'कैलाश सत्यार्थी, जिन्होंने 2014 का नोबेल शांति पुरस्कार साझा किया, मध्य प्रदेश के विदिशा में जन्मे।','ਕੈਲਾਸ਼ ਸਤਿਆਰਥੀ, ਜਿਨ੍ਹਾਂ ਨੇ 2014 ਦਾ ਨੋਬਲ ਸ਼ਾਂਤੀ ਪੁਰਸਕਾਰ ਸਾਂਝਾ ਕੀਤਾ, ਮੱਧ ਪ੍ਰਦੇਸ਼ ਦੇ ਵਿਦਿਸ਼ਾ ਵਿੱਚ ਜਨਮੇ।'),
+ MH:L3("Childline 1098, India's first 24-hour phone helpline for children, began in Mumbai in 1996.",'चाइल्डलाइन 1098, बच्चों के लिए भारत की पहली 24 घंटे की फ़ोन हेल्पलाइन, 1996 में मुंबई में शुरू हुई।','ਚਾਈਲਡਲਾਈਨ 1098, ਬੱਚਿਆਂ ਲਈ ਭਾਰਤ ਦੀ ਪਹਿਲੀ 24 ਘੰਟੇ ਦੀ ਫ਼ੋਨ ਹੈਲਪਲਾਈਨ, 1996 ਵਿੱਚ ਮੁੰਬਈ ਵਿੱਚ ਸ਼ੁਰੂ ਹੋਈ।'),
+ DL:L3("NALSA, the authority behind the free legal aid number 15100, is based in New Delhi.",'NALSA, जो मुफ़्त क़ानूनी सहायता नंबर 15100 के पीछे की संस्था है, नई दिल्ली में स्थित है।','NALSA, ਜੋ ਮੁਫ਼ਤ ਕਾਨੂੰਨੀ ਸਹਾਇਤਾ ਨੰਬਰ 15100 ਪਿੱਛੇ ਦੀ ਸੰਸਥਾ ਹੈ, ਨਵੀਂ ਦਿੱਲੀ ਵਿੱਚ ਸਥਿਤ ਹੈ।'),
+ HR:L3("The Beti Bachao Beti Padhao campaign for girls' education was launched in Panipat, Haryana, in January 2015.",'बेटी बचाओ बेटी पढ़ाओ अभियान, लड़कियों की शिक्षा के लिए, जनवरी 2015 में हरियाणा के पानीपत में शुरू हुआ।','ਕੁੜੀਆਂ ਦੀ ਸਿੱਖਿਆ ਲਈ ਬੇਟੀ ਬਚਾਓ ਬੇਟੀ ਪੜ੍ਹਾਓ ਮੁਹਿੰਮ ਜਨਵਰੀ 2015 ਵਿੱਚ ਹਰਿਆਣਾ ਦੇ ਪਾਨੀਪਤ ਵਿੱਚ ਸ਼ੁਰੂ ਹੋਈ।'),
+ WB:L3("West Bengal's Kanyashree scheme, started in 2013, gives girls money to stay in school and delay marriage.",'पश्चिम बंगाल की कन्याश्री योजना, 2013 में शुरू हुई, लड़कियों को स्कूल में बने रहने और शादी टालने के लिए पैसे देती है।','ਪੱਛਮੀ ਬੰਗਾਲ ਦੀ ਕੰਨਿਆਸ਼੍ਰੀ ਯੋਜਨਾ, 2013 ਵਿੱਚ ਸ਼ੁਰੂ ਹੋਈ, ਕੁੜੀਆਂ ਨੂੰ ਸਕੂਲ ਵਿੱਚ ਰਹਿਣ ਅਤੇ ਵਿਆਹ ਟਾਲਣ ਲਈ ਪੈਸੇ ਦਿੰਦੀ ਹੈ।'),
+ OD:L3("In Bhubaneswar, Odisha, the Kalinga Institute of Social Sciences gives tribal children free schooling, food and a place to live.",'ओडिशा के भुवनेश्वर में कलिंग इंस्टीट्यूट ऑफ़ सोशल साइंसेज़ आदिवासी बच्चों को मुफ़्त पढ़ाई, भोजन और रहने की जगह देता है।','ਓਡੀਸ਼ਾ ਦੇ ਭੁਵਨੇਸ਼ਵਰ ਵਿੱਚ ਕਲਿੰਗਾ ਇੰਸਟੀਚਿਊਟ ਆਫ਼ ਸੋਸ਼ਲ ਸਾਇੰਸਿਜ਼ ਆਦਿਵਾਸੀ ਬੱਚਿਆਂ ਨੂੰ ਮੁਫ਼ਤ ਪੜ੍ਹਾਈ, ਭੋਜਨ ਅਤੇ ਰਹਿਣ ਦੀ ਥਾਂ ਦਿੰਦਾ ਹੈ।'),
+ RJ:L3("Akshaya Tritiya is a day when many weddings happen, so officials and volunteers watch closely to stop child marriages.",'अक्षय तृतीया पर कई शादियाँ होती हैं, इसलिए अधिकारी और स्वयंसेवक बाल विवाह रोकने के लिए ख़ास नज़र रखते हैं।','ਅਕਸ਼ੈ ਤ੍ਰਿਤੀਆ ਉੱਤੇ ਬਹੁਤ ਵਿਆਹ ਹੁੰਦੇ ਹਨ, ਇਸ ਲਈ ਅਧਿਕਾਰੀ ਅਤੇ ਵਲੰਟੀਅਰ ਬਾਲ ਵਿਆਹ ਰੋਕਣ ਲਈ ਖ਼ਾਸ ਨਜ਼ਰ ਰੱਖਦੇ ਹਨ।'),
+ PB:L3("Saksham speaks Punjabi too! Learning your rights in your own language helps you remember them.",'सक्षम पंजाबी भी बोलता है! अपनी भाषा में अधिकार सीखने से वे याद रहते हैं।','ਸਕਸ਼ਮ ਪੰਜਾਬੀ ਵੀ ਬੋਲਦਾ ਹੈ! ਆਪਣੀ ਬੋਲੀ ਵਿੱਚ ਹੱਕ ਸਿੱਖਣ ਨਾਲ ਉਹ ਯਾਦ ਰਹਿੰਦੇ ਹਨ।'),
+ TS:L3("Saksham speaks Telugu too! Learning your rights in your own language helps you remember them.",'सक्षम तेलुगु भी बोलता है! अपनी भाषा में अधिकार सीखने से वे याद रहते हैं।','ਸਕਸ਼ਮ ਤੇਲਗੂ ਵੀ ਬੋਲਦਾ ਹੈ! ਆਪਣੀ ਬੋਲੀ ਵਿੱਚ ਹੱਕ ਸਿੱਖਣ ਨਾਲ ਉਹ ਯਾਦ ਰਹਿੰਦੇ ਹਨ।'),
+ BR:L3("Bihar began giving free bicycles to girls entering secondary school in 2006, so more girls could ride to class.",'बिहार ने 2006 में माध्यमिक स्कूल में जाने वाली लड़कियों को मुफ़्त साइकिल देना शुरू किया, ताकि ज़्यादा लड़कियाँ कक्षा तक पहुँच सकें।','ਬਿਹਾਰ ਨੇ 2006 ਵਿੱਚ ਸੈਕੰਡਰੀ ਸਕੂਲ ਵਿੱਚ ਜਾਣ ਵਾਲੀਆਂ ਕੁੜੀਆਂ ਨੂੰ ਮੁਫ਼ਤ ਸਾਈਕਲ ਦੇਣੇ ਸ਼ੁਰੂ ਕੀਤੇ, ਤਾਂ ਜੋ ਵੱਧ ਕੁੜੀਆਂ ਜਮਾਤ ਤੱਕ ਪਹੁੰਚ ਸਕਣ।'),
+ GJ:L3("Every June, Gujarat holds Shala Praveshotsav, a festival to welcome children to school.",'हर जून गुजरात में शाला प्रवेशोत्सव मनाया जाता है, जो बच्चों का स्कूल में स्वागत करने का उत्सव है।','ਹਰ ਜੂਨ ਗੁਜਰਾਤ ਵਿੱਚ ਸ਼ਾਲਾ ਪ੍ਰਵੇਸ਼ੋਤਸਵ ਮਨਾਇਆ ਜਾਂਦਾ ਹੈ, ਜੋ ਬੱਚਿਆਂ ਦਾ ਸਕੂਲ ਵਿੱਚ ਸਵਾਗਤ ਕਰਨ ਦਾ ਤਿਉਹਾਰ ਹੈ।'),
+ MZ:L3("Mizoram is one of the most literate states in India.",'मिज़ोरम भारत के सबसे साक्षर राज्यों में से एक है।','ਮਿਜ਼ੋਰਮ ਭਾਰਤ ਦੇ ਸਭ ਤੋਂ ਸਾਖਰ ਰਾਜਾਂ ਵਿੱਚੋਂ ਇੱਕ ਹੈ।'),
+ AS:L3("Children of tea-garden workers in Assam have exactly the same right to school as every other child.",'असम के चाय बाग़ानों में काम करने वालों के बच्चों को भी स्कूल का वही अधिकार है जो हर दूसरे बच्चे को है।','ਅਸਾਮ ਦੇ ਚਾਹ ਬਾਗ਼ਾਂ ਵਿੱਚ ਕੰਮ ਕਰਨ ਵਾਲਿਆਂ ਦੇ ਬੱਚਿਆਂ ਨੂੰ ਵੀ ਸਕੂਲ ਦਾ ਉਹੀ ਹੱਕ ਹੈ ਜੋ ਹਰ ਦੂਜੇ ਬੱਚੇ ਨੂੰ ਹੈ।'),
+ UP:L3("Uttar Pradesh is India's most populous state, so a huge number of children go to its schools.",'उत्तर प्रदेश भारत का सबसे ज़्यादा आबादी वाला राज्य है, इसलिए इसके स्कूलों में बहुत बड़ी संख्या में बच्चे पढ़ते हैं।','ਉੱਤਰ ਪ੍ਰਦੇਸ਼ ਭਾਰਤ ਦਾ ਸਭ ਤੋਂ ਵੱਧ ਆਬਾਦੀ ਵਾਲਾ ਰਾਜ ਹੈ, ਇਸ ਲਈ ਇਸ ਦੇ ਸਕੂਲਾਂ ਵਿੱਚ ਬਹੁਤ ਵੱਡੀ ਗਿਣਤੀ ਵਿੱਚ ਬੱਚੇ ਪੜ੍ਹਦੇ ਹਨ।')
+};
+var mapSel=null,factIdx=null;
+
+function tileIdx(code){for(var i=0;i<TILES.length;i++)if(TILES[i][0]===code)return i;return -1}
+function mapInfo(){
+  if(!mapSel)return '<div class="mi0">👆 '+esc(t('mapTap'))+'</div>';
+  var i=tileIdx(mapSel),x=TILES[i],f=TFACT[x[0]],txt=f?T(f):T(FACTS[(i*5+2)%FACTS.length].t);
+  return '<div class="mi" data-r="'+x[3]+'"><div class="mic tl" data-r="'+x[3]+'" style="aspect-ratio:auto;opacity:1;border-radius:50%">'+x[0]+'</div><div class="mt"><h3>'+esc(T(x[4]))+'</h3><span class="tag">'+(f?'':'🇮🇳 ')+esc(t(f?'tagState':'tagIndia'))+'</span><p id="mtxt">'+esc(txt)+'</p></div><button class="btn sm alt" data-x="speakmap" aria-label="'+esc(t('listen'))+'">'+esc(t('listen'))+'</button></div>';
+}
+function mapHTML(){
+  return '<section class="mapsec glass" aria-label="'+esc(t('mapT'))+'"><div class="mhead"><div><h2>🗺️ '+esc(t('mapT'))+'</h2><p>'+esc(t('mapSub'))+'</p></div><span class="tag" id="mapCount">'+esc(t('mapExp',{a:cnt(social.tiles),b:TILES.length}))+'</span></div>'+
+  '<div class="tmap" role="group" aria-label="'+esc(t('mapT'))+'">'+TILES.map(function(x){
+    return '<button class="tl'+(social.tiles[x[0]]?' seen':'')+(mapSel===x[0]?' sel':'')+'" data-tile="'+x[0]+'" data-r="'+x[3]+'" style="grid-column:'+(x[1]+1)+';grid-row:'+(x[2]+1)+'" aria-label="'+esc(T(x[4]))+'">'+x[0]+'</button>'}).join('')+'</div>'+
+  '<div class="minfo" id="minfo" aria-live="polite">'+mapInfo()+'</div><p class="fine" style="text-align:center">'+esc(t('mapNote'))+'</p></section>';
+}
+function pickTile(code){
+  mapSel=code;social.tiles[code]=1;saveSocial();
+  app.querySelectorAll('.tl[data-tile]').forEach(function(b){var on=b.dataset.tile===code;b.classList.toggle('sel',on);if(on)b.classList.add('seen')});
+  var mi=$('#minfo');if(mi)mi.innerHTML=mapInfo();
+  var mc=$('#mapCount');if(mc)mc.textContent=t('mapExp',{a:cnt(social.tiles),b:TILES.length});
+  sfx('pop');checkBadges(true);
+}
+
+function factHTML(){
+  if(factIdx===null)factIdx=Math.floor(Date.now()/864e5)%FACTS.length;
+  social.facts[factIdx]=1;saveSocial();
+  var f=FACTS[factIdx];
+  return '<section class="fsec clay fcard" id="fcard"><div class="fic" id="fic" aria-hidden="true">'+f.i+'</div><div><h3>'+esc(t('factT'))+'</h3><p class="ftxt" id="ftxt" aria-live="polite">'+esc(T(f.t))+'</p>'+
+  '<div class="row" style="justify-content:flex-start;align-items:center"><button class="btn sun sm" data-x="fact">'+esc(t('factBtn'))+'</button><button class="btn alt sm" data-x="speakfact">'+esc(t('listen'))+'</button><span class="tag" id="fcount">'+esc(t('factSeen',{a:cnt(social.facts),b:FACTS.length}))+'</span></div></div></section>';
+}
+function nextFact(){
+  var all=FACTS.map(function(_,i){return i}),unseen=all.filter(function(i){return !social.facts[i]}),pool=(unseen.length?unseen:all).filter(function(i){return i!==factIdx});
+  if(!pool.length)pool=all.filter(function(i){return i!==factIdx});
+  factIdx=pool[Math.floor(Math.random()*pool.length)];social.facts[factIdx]=1;saveSocial();
+  var c=$('#fcard');if(!c)return;c.classList.remove('flip');void c.offsetWidth;c.classList.add('flip');
+  setTimeout(function(){var a=$('#fic'),b=$('#ftxt');if(a)a.textContent=FACTS[factIdx].i;if(b)b.textContent=T(FACTS[factIdx].t);var n=$('#fcount');if(n)n.textContent=t('factSeen',{a:cnt(social.facts),b:FACTS.length})},230);
+  sfx('whoosh');checkBadges(true);
+}
+
+/* ---- progress as a compact digit string, one digit (0-3 stars) per right ---- */
+var RIDS=RIGHTS.map(function(r){return r.id});
+function progressDigits(){return RIGHTS.map(function(r){var d=progress.done[r.id];return d?String(Math.min(3,Math.max(1,d.stars||1))):'0'}).join('')}
+function statFromS(s){
+  var n=0,stars=0,three=0;for(var i=0;i<s.length;i++){var v=+s.charAt(i)||0;if(v>0)n++;stars+=v;if(v===3)three++}
+  return {n:n,stars:stars,three:three,has:function(id){var i=RIDS.indexOf(id);return i>=0&&(+s.charAt(i)||0)>0},tiles:0,facts:0,langs:0,profile:false,help:false};
+}
+function meStat(){var st=statFromS(progressDigits());st.tiles=cnt(social.tiles);st.facts=cnt(social.facts);st.langs=cnt(social.langs);st.profile=!!social.me;st.help=!!social.flags.help;return st}
+
+/* ---- badges ---- */
+var BADGES=[
+ {id:'first',ic:'⭐',c:'#ffd25e',p:1,name:L3('First Step','पहला कदम','ਪਹਿਲਾ ਕਦਮ'),hint:L3('Finish your first building','अपनी पहली इमारत पूरी करो','ਆਪਣੀ ਪਹਿਲੀ ਇਮਾਰਤ ਪੂਰੀ ਕਰੋ'),ok:function(s){return s.n>=1}},
+ {id:'five',ic:'🧭',c:'#7fc8f0',p:1,name:L3('Rights Explorer','अधिकार खोजी','ਹੱਕ ਖੋਜੀ'),hint:L3('Finish 5 buildings','5 इमारतें पूरी करो','5 ਇਮਾਰਤਾਂ ਪੂਰੀਆਂ ਕਰੋ'),ok:function(s){return s.n>=5}},
+ {id:'half',ic:'⛰️',c:'#8ad49a',p:1,name:L3('Halfway Hero','आधे रास्ते का हीरो','ਅੱਧੇ ਰਾਹ ਦਾ ਹੀਰੋ'),hint:L3('Finish 15 buildings','15 इमारतें पूरी करो','15 ਇਮਾਰਤਾਂ ਪੂਰੀਆਂ ਕਰੋ'),ok:function(s){return s.n>=15}},
+ {id:'all',ic:'🏆',c:'#ffb62e',p:1,name:L3('Saksham Champion','सक्षम चैंपियन','ਸਕਸ਼ਮ ਚੈਂਪੀਅਨ'),hint:L3('Finish every building','हर इमारत पूरी करो','ਹਰ ਇਮਾਰਤ ਪੂਰੀ ਕਰੋ'),ok:function(s){return s.n>=RIGHTS.length}},
+ {id:'perfect',ic:'💯',c:'#ff9d86',p:1,name:L3('Perfect Score','पूरे अंक','ਪੂਰੇ ਅੰਕ'),hint:L3('Win 3 stars in one building','एक इमारत में 3 सितारे जीतो','ਇੱਕ ਇਮਾਰਤ ਵਿੱਚ 3 ਤਾਰੇ ਜਿੱਤੋ'),ok:function(s){return s.three>=1}},
+ {id:'stars',ic:'🌟',c:'#f2b43c',p:1,name:L3('Star Collector','सितारा संग्राहक','ਤਾਰਾ ਸੰਗ੍ਰਹਿਕਾਰ'),hint:L3('Collect 30 stars','30 सितारे जमा करो','30 ਤਾਰੇ ਜਮ੍ਹਾਂ ਕਰੋ'),ok:function(s){return s.stars>=30}},
+ {id:'shield',ic:'🛡️',c:'#5aa9ee',p:1,name:L3('Safe & Strong','सुरक्षित और मज़बूत','ਸੁਰੱਖਿਅਤ ਅਤੇ ਮਜ਼ਬੂਤ'),hint:L3('Finish the abuse, corporal punishment and bullying buildings','दुर्व्यवहार, शारीरिक दंड और बदमाशी वाली इमारतें पूरी करो','ਦੁਰਵਿਵਹਾਰ, ਸਰੀਰਕ ਸਜ਼ਾ ਅਤੇ ਧੱਕੇਸ਼ਾਹੀ ਵਾਲੀਆਂ ਇਮਾਰਤਾਂ ਪੂਰੀਆਂ ਕਰੋ'),ok:function(s){return s.has('pocso')&&s.has('corporal')&&s.has('bully')}},
+ {id:'school',ic:'🎒',c:'#e9826c',p:1,name:L3('School Star','स्कूल सितारा','ਸਕੂਲ ਸਿਤਾਰਾ'),hint:L3('Finish the education, meals, admission and scholarship buildings','शिक्षा, भोजन, प्रवेश और छात्रवृत्ति वाली इमारतें पूरी करो','ਸਿੱਖਿਆ, ਭੋਜਨ, ਦਾਖ਼ਲੇ ਅਤੇ ਵਜ਼ੀਫ਼ੇ ਵਾਲੀਆਂ ਇਮਾਰਤਾਂ ਪੂਰੀਆਂ ਕਰੋ'),ok:function(s){return s.has('education')&&s.has('meal')&&s.has('admission')&&s.has('scholarship')}},
+ {id:'mapper',ic:'🗺️',c:'#b794e8',name:L3('Map Explorer','नक्शा खोजी','ਨਕਸ਼ਾ ਖੋਜੀ'),hint:L3('Tap 12 tiles on the India map','भारत के नक्शे की 12 टाइलें छुओ','ਭਾਰਤ ਦੇ ਨਕਸ਼ੇ ਦੀਆਂ 12 ਟਾਈਲਾਂ ਛੂਹੋ'),ok:function(s){return s.tiles>=12}},
+ {id:'owl',ic:'🦉',c:'#c9a3f0',name:L3('Curious Owl','जिज्ञासु उल्लू','ਜਗਿਆਸੂ ਉੱਲੂ'),hint:L3('Find 8 facts','8 तथ्य खोजो','8 ਤੱਥ ਲੱਭੋ'),ok:function(s){return s.facts>=8}},
+ {id:'poly',ic:'🌐',c:'#6ed3cf',name:L3('Polyglot','बहुभाषी','ਬਹੁਭਾਸ਼ੀ'),hint:L3('Try 3 different languages','3 अलग भाषाएँ आज़माओ','3 ਵੱਖ-ਵੱਖ ਭਾਸ਼ਾਵਾਂ ਅਜ਼ਮਾਓ'),ok:function(s){return s.langs>=3}},
+ {id:'member',ic:'👥',c:'#ff9fb8',name:L3('Class Member','कक्षा सदस्य','ਜਮਾਤ ਮੈਂਬਰ'),hint:L3('Save your champion card in Community','समुदाय में अपना चैंपियन कार्ड सहेजो','ਭਾਈਚਾਰੇ ਵਿੱਚ ਆਪਣਾ ਚੈਂਪੀਅਨ ਕਾਰਡ ਸੰਭਾਲੋ'),ok:function(s){return s.profile}},
+ {id:'helper',ic:'🆘',c:'#f08a80',name:L3('Know Your Helplines','हेल्पलाइन की जानकारी','ਹੈਲਪਲਾਈਨ ਦੀ ਜਾਣਕਾਰੀ'),hint:L3('Open the Help Centre and look at the numbers','मदद केंद्र खोलकर नंबर देखो','ਮਦਦ ਕੇਂਦਰ ਖੋਲ੍ਹ ਕੇ ਨੰਬਰ ਵੇਖੋ'),ok:function(s){return s.help}}
+];
+var toastT=null;
+function toast(msg){var el=$('#toast');if(!el)return;el.textContent=msg;el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(function(){el.classList.remove('show')},3800)}
+function checkBadges(announce){
+  var s=meStat(),got=[];
+  BADGES.forEach(function(b){if(b.ok(s)&&!social.badges[b.id]){social.badges[b.id]=Date.now();got.push(b)}});
+  if(got.length){saveSocial();if(announce){toast('🏅 '+t('newBadge',{b:got.map(function(b){return T(b.name)}).join(', ')}));sfx('win')}}
+  return got;
+}
+function badges(){
+  route='badges';play=null;stopSpeak();clearInterval(typeTimer);clearTimeout(tipTimer);
+  checkBadges(false);
+  var s=meStat(),have=BADGES.filter(function(b){return b.ok(s)}),nextB=BADGES.filter(function(b){return !b.ok(s)})[0],pct=Math.round(have.length/BADGES.length*100);
+  app.innerHTML='<div class="view"><section class="bsum glass"><div>'+owl(110)+'</div><div class="grow"><h2>🏅 '+esc(t('badgeT'))+'</h2><p>'+esc(t('badgeSub'))+'</p><div class="bar2" role="progressbar" aria-valuemin="0" aria-valuemax="'+BADGES.length+'" aria-valuenow="'+have.length+'"><i style="width:'+pct+'%"></i></div><p style="margin:8px 0 0;font-weight:800;color:var(--ink)">'+esc(t('badgeCount',{a:have.length,b:BADGES.length}))+(nextB?' · '+esc(t('badgeNext'))+' '+esc(T(nextB.name)):'')+'</p></div></section>'+
+  '<section class="bgrid">'+BADGES.map(function(b){var on=b.ok(s);return '<div class="bdg '+(on?'on':'lock')+(nextB===b?' next':'')+'" style="--bc:'+b.c+'"><div class="med" aria-hidden="true">'+b.ic+'</div><b>'+esc(T(b.name))+'</b><small>'+esc(T(b.hint))+'</small></div>'}).join('')+'</section></div>';
+  drawTabs();window.scrollTo(0,0);
+}
+
+/* ---- community: champion cards, class wall, teacher tools ---- */
+var AV=['🦁','🐯','🐼','🦊','🐸','🐧','🦄','🐢','🦋','🐬','🐘','🌻','🚀','⚽','🎨','🌈'];
+var commAv=null,ttOpen=false,tmsg='';
+function cleanName(n){return Array.from(String(n||'').replace(/[\u0000-\u001f|<>&"'\\]/g,'').trim()).slice(0,14).join('')}
+function encCode(name,av,s){try{return 'SKM1.'+btoa(unescape(encodeURIComponent(name+'|'+av+'|'+s)))}catch(e){return ''}}
+function decCode(code){
+  try{
+    code=String(code||'').replace(/\s+/g,'');if(code.indexOf('SKM1.')!==0)return null;
+    var p=decodeURIComponent(escape(atob(code.slice(5)))).split('|');if(p.length!==3)return null;
+    var name=cleanName(p[0]);if(!name)return null;
+    var av=AV.indexOf(p[1])>=0?p[1]:'🙂',s=/^[0-3]*$/.test(p[2])?p[2]:'';
+    while(s.length<RIDS.length)s+='0';s=s.slice(0,RIDS.length);
+    return {id:'c'+hash(name+'|'+av),name:name,av:av,s:s};
+  }catch(e){return null}
+}
+function hash(str){var h=5381;for(var i=0;i<str.length;i++)h=((h<<5)+h+str.charCodeAt(i))|0;return (h>>>0).toString(36)}
+function syncMe(){
+  if(!social.me)return;
+  var o={id:'me',name:social.me.name,av:social.me.av,s:progressDigits()},i=-1;
+  social.roster.forEach(function(x,k){if(x.id==='me')i=k});
+  if(i<0)social.roster.unshift(o);else social.roster[i]=o;
+  saveSocial();
+}
+function badgesOf(st,isMe){return BADGES.filter(function(b){return (isMe||b.p)&&b.ok(st)})}
+function community(){
+  route='community';play=null;stopSpeak();clearInterval(typeTimer);clearTimeout(tipTimer);
+  syncMe();
+  if(commAv===null)commAv=social.me?social.me.av:AV[0];
+  var me=social.me,N=RIGHTS.length;
+  var list=social.roster.slice().sort(function(a,b){return a.id==='me'?-1:(b.id==='me'?1:a.name.localeCompare(b.name))}); /* alphabetical on purpose: no ranking, so nobody is shamed */
+  var h='<div class="view"><section class="tsec glass" style="border-radius:34px"><h2 style="font-size:clamp(28px,5vw,40px)">👥 '+esc(t('commT'))+'</h2><p style="font-weight:600;margin:6px 0 0">'+esc(t('commSub'))+'</p></section>';
+  /* champion card */
+  h+='<section class="tsec clay"><h3>🪪 '+esc(t('youT'))+'</h3><b>'+esc(t('avT'))+'</b><div class="avpick" role="group">'+AV.map(function(a){return '<button class="avb" data-av="'+a+'" aria-pressed="'+(a===commAv)+'" aria-label="'+a+'">'+a+'</button>'}).join('')+'</div>'+
+   '<input class="fld" id="nick" maxlength="14" autocomplete="off" placeholder="'+esc(t('nickPh'))+'" value="'+esc(me?me.name:'')+'" aria-label="'+esc(t('nickPh'))+'"><p class="fine" id="nickmsg" role="status">'+esc(t('nickHelp'))+'</p>'+
+   '<div class="row" style="justify-content:flex-start"><button class="btn sun" data-x="saveme">'+esc(t('saveMe'))+'</button></div>';
+  if(me){var code=encCode(me.name,me.av,progressDigits());h+='<div class="codebox"><b style="width:100%">'+esc(t('codeT'))+'</b><code id="mycode">'+esc(code)+'</code><button class="btn sm alt" data-x="copycode">'+esc(t('copyCode'))+'</button></div><p class="fine">'+esc(t('codeHelp'))+'</p>'}
+  h+='</section>';
+  /* class wall */
+  h+='<section class="tsec glass" style="border-radius:34px"><h3>🌈 '+esc(t('wallT'))+'</h3>';
+  if(!list.length)h+='<p style="font-weight:700">'+esc(t('wallEmpty'))+'</p>';
+  else h+='<div class="wall">'+list.map(function(x){var st=statFromS(x.s),isMe=x.id==='me',bs=badgesOf(isMe?meStat():st,isMe);
+    return '<div class="scard'+(isMe?' me':'')+'">'+(isMe?'<span class="youtag">'+esc(t('you'))+'</span>':'')+'<div class="av" aria-hidden="true">'+esc(x.av)+'</div><b>'+esc(x.name)+'</b><div class="bar2"><i style="width:'+Math.round(st.n/N*100)+'%"></i></div><small>'+st.n+'/'+N+' · ⭐ '+st.stars+'</small><div class="mini" aria-label="'+bs.length+' badges">'+bs.slice(0,6).map(function(b){return b.ic}).join('')+'</div></div>'}).join('')+'</div>';
+  h+='</section>';
+  /* teacher tools */
+  h+='<details class="tsec clay" id="ttools"'+(ttOpen?' open':'')+'><summary>🎓 '+esc(t('ttT'))+'</summary><p class="fine">'+esc(t('ttNote'))+'</p>';
+  var students=list,hasDemo=social.roster.some(function(x){return x.demo});
+  if(!students.length)h+='<p style="font-weight:700">'+esc(t('ttEmpty'))+'</p>';
+  else{
+    var tot=0,starsT=0,per=RIDS.map(function(){return 0});
+    students.forEach(function(x){var st=statFromS(x.s);tot+=st.n;starsT+=st.stars;for(var i=0;i<per.length;i++)if((+x.s.charAt(i)||0)>0)per[i]++});
+    var hi=per.indexOf(Math.max.apply(null,per)),lo=per.indexOf(Math.min.apply(null,per));
+    h+='<div class="stats"><div class="stat"><b>'+students.length+'</b><span>'+esc(t('stStud'))+'</span></div><div class="stat"><b>'+(tot/students.length).toFixed(1)+'</b><span>'+esc(t('stAvg'))+'</span></div><div class="stat"><b>'+starsT+'</b><span>'+esc(t('stStars'))+'</span></div></div>'+
+     '<div class="insight">✅ '+esc(t('stMost'))+': '+RIGHTS[hi].icon+' '+esc(T(RIGHTS[hi].title))+' ('+per[hi]+'/'+students.length+')</div><div class="insight" style="background:rgba(255,236,200,.9);color:#6b4a00">💬 '+esc(t('stLeast'))+': '+RIGHTS[lo].icon+' '+esc(T(RIGHTS[lo].title))+' ('+per[lo]+'/'+students.length+')</div>';
+    h+=students.map(function(x){var st=statFromS(x.s);
+      return '<details class="stu"><summary><span class="sn"><span aria-hidden="true" style="font-size:24px">'+esc(x.av)+'</span>'+esc(x.name)+'</span><span class="sbar bar2"><i style="width:'+Math.round(st.n/N*100)+'%"></i></span><span class="sv">'+st.n+'/'+N+' · ⭐'+st.stars+'</span></summary><div class="sb"><div class="rcg">'+RIGHTS.map(function(r,i){var v=+x.s.charAt(i)||0;return '<span class="rc'+(v?' d':'')+'">'+r.icon+' '+esc(T(r.title))+(v?' '+'⭐'.repeat(v):'')+'</span>'}).join('')+'</div>'+(x.id==='me'?'':'<button class="btn sm alt" data-x="rm" data-id="'+esc(x.id)+'">'+esc(t('rm'))+'</button>')+'</div></details>'}).join('');
+  }
+  h+='<div style="margin-top:14px"><b>'+esc(t('addCode'))+'</b><textarea class="fld" id="codein" rows="2" spellcheck="false" placeholder="SKM1.…" aria-label="'+esc(t('addCode'))+'"></textarea></div>'+
+   '<div class="row noprint" style="justify-content:flex-start;margin-top:10px"><button class="btn sm sun" data-x="addcode">'+esc(t('addBtn'))+'</button>'+(students.length?'<button class="btn sm alt" data-x="csv">'+esc(t('csvBtn'))+'</button>':'')+'<button class="btn sm alt" data-x="demo">'+esc(t(hasDemo?'demoOff':'demoOn'))+'</button></div><p class="fine" id="tmsg" role="status">'+esc(tmsg)+'</p></details></div>';
+  tmsg='';
+  app.innerHTML=h;drawTabs();window.scrollTo(0,0);
+}
+function demoClass(){
+  var names=[['Sher','🦁',30],['Chhotu','🐼',24],['Meena','🦋',19],['Tiger','🐯',15],['Lotus','🌻',11],['Rocket','🚀',8],['Pari','🦄',5],['Dolphin','🐬',2]],seed=7;
+  function rnd(){seed=(seed*1103515245+12345)&0x7fffffff;return seed/0x7fffffff}
+  return names.map(function(x){var order=RIDS.map(function(_,i){return i}).sort(function(){return rnd()-.5}),s=RIDS.map(function(){return '0'});
+    for(var k=0;k<Math.min(x[2],RIDS.length);k++)s[order[k]]=String(1+Math.floor(rnd()*3));
+    return {id:'demo-'+x[0],name:x[0],av:x[1],s:s.join(''),demo:true}});
+}
+function csvCell(v){v=String(v);if(/^[=+\-@\t\r]/.test(v))v="'"+v;return '"'+v.replace(/"/g,'""')+'"'}
+function exportCsv(){
+  var rows=[['Nickname','Rights completed','Total stars'].concat(RIGHTS.map(function(r){return (r.title&&r.title.en)||r.id}))];
+  social.roster.forEach(function(x){var st=statFromS(x.s);rows.push([x.name,st.n,st.stars].concat(RIDS.map(function(_,i){return +x.s.charAt(i)||0})))});
+  var csv='\ufeff'+rows.map(function(r){return r.map(csvCell).join(',')}).join('\r\n');
+  try{var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='saksham-class.csv';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500)}catch(e){}
+}
+var tabDefs=[['home','🏠','tabHome'],['community','👥','tabComm'],['badges','🏅','tabBadge'],['teacher','🎓','tabTeach']];
+function drawTabs(){
+  var cur=route==='play'?'home':route,el=$('#tabs');if(!el)return;
+  el.innerHTML=tabDefs.map(function(d){return '<button class="tab" role="tab" data-tab="'+d[0]+'" aria-selected="'+(d[0]===cur)+'"><span class="ti" aria-hidden="true">'+d[1]+'</span><span>'+esc(t(d[2]))+'</span></button>'}).join('');
+}
+function goTab(id){
+  if(id==='home')home();else if(id==='community')community();else if(id==='badges')badges();else if(id==='teacher')teacher();
+  sfx('whoosh');
+}
+
+/* actions inside the new views */
+app.addEventListener('click',function(e){
+  var b=e.target.closest('[data-x],[data-tile],[data-av]');if(!b)return;
+  if(b.dataset.tile){pickTile(b.dataset.tile);return}
+  if(b.dataset.av!==undefined){commAv=b.dataset.av;app.querySelectorAll('.avb').forEach(function(x){x.setAttribute('aria-pressed',x.dataset.av===commAv)});sfx('pop');return}
+  switch(b.dataset.x){
+    case 'fact':nextFact();break;
+    case 'speakfact':var f=$('#ftxt');if(f)speak(f.textContent);break;
+    case 'speakmap':var m=$('#mtxt');if(m)speak(m.textContent);break;
+    case 'saveme':
+      var nm=cleanName($('#nick').value),msg=$('#nickmsg');
+      if(!nm){msg.textContent=t('nickEmpty');break}
+      if(/\d{5,}/.test(nm.replace(/[\s-]/g,''))){msg.textContent=t('nickBad');break}
+      social.me={name:nm,av:commAv||AV[0]};saveSocial();syncMe();var gb=checkBadges(true);ttOpen=false;community();if(!gb.length)toast(t('savedOk'));break;
+    case 'copycode':var c=$('#mycode');if(c&&navigator.clipboard)navigator.clipboard.writeText(c.textContent).then(function(){b.textContent=t('copied')}).catch(function(){});break;
+    case 'addcode':
+      var st=decCode($('#codein').value);
+      if(!st){$('#tmsg').textContent=t('badCode');break}
+      if(social.me&&st.name===social.me.name&&st.av===social.me.av)st.id='me'; /* your own code: update your card, no duplicate */
+      var at=-1;social.roster.forEach(function(x,i){if(x.id===st.id)at=i});
+      if(at<0)social.roster.push(st);else social.roster[at]=st;
+      saveSocial();ttOpen=true;tmsg=t('addedOk');community();break;
+    case 'rm':social.roster=social.roster.filter(function(x){return x.id!==b.dataset.id});saveSocial();ttOpen=true;community();break;
+    case 'demo':
+      if(social.roster.some(function(x){return x.demo}))social.roster=social.roster.filter(function(x){return !x.demo});
+      else social.roster=social.roster.concat(demoClass());
+      saveSocial();ttOpen=true;community();break;
+    case 'csv':exportCsv();break;
+  }
+});
+app.addEventListener('toggle',function(e){if(e.target&&e.target.id==='ttools')ttOpen=e.target.open},true);
+$('#tabs').addEventListener('click',function(e){var b=e.target.closest('[data-tab]');if(b)goTab(b.dataset.tab)});
 
 /* =============== EVENTS =============== */
 app.addEventListener('click',function(e){
@@ -2193,7 +2648,6 @@ app.addEventListener('pointerleave',function(e){if(e.target.id==='town'){e.targe
 
 document.addEventListener('click',function(e){if(e.target.closest('button,a.contact,.bld')&&!e.target.closest('[data-pick],[data-ans]'))sfx('tap')},true);
 $('#logo').addEventListener('click',home);
-$('#teachBtn').addEventListener('click',function(){teacher()});
 $('#soundBtn').addEventListener('click',function(){setSound(!soundOn)});
 $('#langSel').addEventListener('change',function(){setLang(this.value)});
 $('#helpFab').addEventListener('click',openHelp);
@@ -2268,7 +2722,7 @@ async function ask(text){
 $('#logoOwl').innerHTML=owl(38);$('#fabOwl').innerHTML=owl(36);$('#chatOwl').innerHTML=owl(40);
 $('#soundBtn').textContent=soundOn?'🔊':'🔇';$('#soundBtn').setAttribute('aria-pressed',soundOn?'true':'false');
 lang=prefs.lang&&UI.tagline[prefs.lang]?prefs.lang:'en';
-applyStatic();home();
+social.langs[lang]=1;saveSocial();applyStatic();home();
 if(!prefs.lang){showPanel($('#langM'))}
 })();
 </script>

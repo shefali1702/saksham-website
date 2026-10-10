@@ -1,94 +1,107 @@
 /* ==========================================================================
-   SAKSHAM — DIRECT 30-MODULE ENGINE
+   SAKSHAM — NON-DESTRUCTIVE 30-BUILDING INJECTOR
    ========================================================================== */
 
-const MODULES_DATA = [
-  // Pillar 1: Town Scenarios
-  { id: 1, icon: "🏫", name: "School (RTE Act)", category: "Town", desc: "Interactive scenario on stopping forced school dropouts.", story: "Raju's parents want him to quit school to work in the fields. What is the lawful choice?", choices: [{ text: "Quit school quietly", correct: false, feedback: "Article 21A guarantees free education up to age 14!" }, { text: "Involve school committee & invoke RTE", correct: true, feedback: "RTE mandates compulsory elementary education." }] },
-  { id: 2, icon: "🍲", name: "Dhaba & Market (Child Labor)", category: "Town", desc: "Scenario on wage denial and commercial child labor.", story: "11-year-old Chotu works 12-hour shifts at a highway tea stall.", choices: [{ text: "Ignore the situation", correct: false, feedback: "Child labor under 14 is strictly prohibited." }, { text: "Report to Childline (1098)", correct: true, feedback: "Childline rescue teams immediately intervene." }] },
-  { id: 3, icon: "🛡️", name: "Safe House (POCSO Protection)", category: "Town", desc: "Safe touch and body autonomy awareness.", story: "Understanding confidential reporting rights under POCSO.", choices: [{ text: "Keep secrets about uncomfortable touches", correct: false, feedback: "Always speak up to a trusted adult!" }, { text: "Report immediately under POCSO guidelines", correct: true, feedback: "POCSO provides strict legal protection." }] },
-  { id: 4, icon: "🏛️", name: "Panchayat (Child Marriage)", category: "Town", desc: "Preventing underage marriage traditions.", story: "A minor wedding is planned in the community. How do you stop it?", choices: [{ text: "Attend silently", correct: false, feedback: "Child marriage is illegal and punishable." }, { text: "Alert child protection authorities", correct: true, feedback: "PCMA enables immediate legal intervention." }] },
-  { id: 5, icon: "🏭", name: "Factory & Brick Kiln", category: "Town", desc: "Hazardous industrial exploitation protection." },
-  { id: 6, icon: "🚓", name: "Police Station & SJPU", category: "Town", desc: "Special Juvenile Police Unit protocols for minors." },
-  { id: 7, icon: "🍼", name: "Anganwadi Health Centre", category: "Town", desc: "Nutrition, health, and early childhood care rights." },
+const BUILDINGS_30 = [
+  { id: 1, name: "Primary School", district: "Education", icon: "🏫", color: "#60a5fa", law: "Article 21A (RTE Act)" },
+  { id: 2, name: "High School", district: "Education", icon: "🎓", color: "#3b82f6", law: "Right to Free Secondary Care" },
+  { id: 3, name: "Library Hub", district: "Education", icon: "📚", color: "#2563eb", law: "Right to Knowledge & Digital Access" },
+  { id: 4, name: "Vocational Centre", district: "Education", icon: "🛠️", color: "#1d4ed8", law: "Skill Development Protection" },
+  { id: 5, name: "Anganwadi Care", district: "Education", icon: "🍼", color: "#93c5fd", law: "POSHAN Abhiyaan & Early Care" },
+  { id: 6, name: "Play School", district: "Education", icon: "🎨", color: "#bfdbfe", law: "Early Childhood Care Rights" },
 
-  // Pillar 2: Legal Library
-  { id: 8, icon: "🎓", name: "RTE Act Simple Decoder", category: "Legal", desc: "Plain-language translation of Constitutional Article 21A." },
-  { id: 9, icon: "📜", name: "Child Labor Law Guide", category: "Legal", desc: "Prohibited vs. regulated occupations breakdown." },
-  { id: 10, icon: "📖", name: "POCSO Act Handbook", category: "Legal", desc: "Child-friendly legal rights during official reporting." },
-  { id: 11, icon: "⚖️", name: "Child Marriage Act Guide", category: "Legal", desc: "Legal marriage age criteria and annulment procedures." },
-  { id: 12, icon: "🤝", name: "Juvenile Justice Act Viewer", category: "Legal", desc: "Care and protection provisions for children in need." },
-  { id: 13, icon: "🇮🇳", name: "Constitutional Rights Hub", category: "Legal", desc: "Overview of fundamental rights guaranteed to Indian minors." },
+  { id: 7, name: "Police Station", district: "Legal", icon: "🚓", color: "#ef4444", law: "Special Juvenile Police Unit (SJPU)" },
+  { id: 8, name: "Safe House", district: "Legal", icon: "🛡️", color: "#f87171", law: "POCSO Confidential Protection" },
+  { id: 9, name: "Family Court", district: "Legal", icon: "⚖️", color: "#dc2626", law: "Child-Friendly Legal Proceedings" },
+  { id: 10, name: "NALSA Legal Aid", district: "Legal", icon: "🏛️", color: "#b91c1c", law: "Free Legal Representation Rights" },
+  { id: 11, name: "CWC Office", district: "Legal", icon: "📋", color: "#991b1b", law: "Child Welfare Committee Authority" },
+  { id: 12, name: "Rescue Station", district: "Legal", icon: "🚨", color: "#7f1d1d", law: "1098 Immediate Intervention Unit" },
 
-  // Pillar 3: Myth vs Fact
-  { id: 14, icon: "⚡", name: "Myth: Work Over Education", category: "Mythbuster", desc: "Debunking parental forced-dropout misconceptions." },
-  { id: 15, icon: "⚡", name: "Myth: Commercial Family Business", category: "Mythbuster", desc: "Clarifying illegal commercial labor in family shops." },
-  { id: 16, icon: "⚡", name: "Myth: Custom Supersedes Law", category: "Mythbuster", desc: "Proving statutory law overrules harmful traditional customs." },
-  { id: 17, icon: "⚡", name: "Myth: Private Family Matter", category: "Mythbuster", desc: "Establishing that child abuse is never a private matter." },
+  { id: 13, name: "Highway Dhaba", district: "Labor", icon: "🍲", color: "#f59e0b", law: "Child Labour Prohibition Act" },
+  { id: 14, name: "Brick Kiln", district: "Labor", icon: "🏭", color: "#d97706", law: "Hazardous Employment Ban" },
+  { id: 15, name: "Garment Unit", district: "Labor", icon: "🧵", color: "#b45309", law: "Factory Act Minimum Age Standards" },
+  { id: 16, name: "Tea Stall", district: "Labor", icon: "☕", color: "#92400e", law: "Commercial Establishment Ban" },
+  { id: 17, name: "Firecracker Unit", district: "Labor", icon: "💥", color: "#78350f", law: "Strict Hazardous Occupation Prohibition" },
+  { id: 18, name: "Agricultural Farm", district: "Labor", icon: "🌾", color: "#fef3c7", law: "Seasonal School Attendance Mandate" },
 
-  // Pillar 4: SOS Safety
-  { id: 18, icon: "📞", name: "Childline 1098 Dialer", category: "SOS", desc: "Direct 24/7 emergency toll-free protection helpline." },
-  { id: 19, icon: "🚨", name: "National Emergency 112", category: "SOS", desc: "Integrated police, fire, and medical dispatch." },
-  { id: 20, icon: "⚖️", name: "NALSA Free Legal Aid", category: "SOS", desc: "Free legal representation services for children and families." },
-  { id: 21, icon: "📋", name: "Kid Safety Checklist", category: "SOS", desc: "Interactive personal boundary self-assessment tool." },
+  { id: 19, name: "Gram Panchayat", district: "Civic", icon: "🏛️", color: "#10b981", law: "Prohibition of Child Marriage Act" },
+  { id: 20, name: "Health Centre", district: "Civic", icon: "🏥", color: "#059669", law: "Right to Essential Health & Vaccines" },
+  { id: 21, name: "Shelter Home", district: "Civic", icon: "🏡", color: "#047857", law: "Juvenile Justice Care & Protection" },
+  { id: 22, name: "Youth Club", district: "Civic", icon: "⚽", color: "#065f46", law: "Right to Recreation & Play" },
+  { id: 23, name: "Helpline Post", district: "Civic", icon: "📞", color: "#a7f3d0", law: "Childline 1098 Emergency Access" },
+  { id: 24, name: "Nutrition Hub", district: "Civic", icon: "🍎", color: "#6ee7b7", law: "Mid-Day Meal Scheme Right" },
 
-  // Pillar 5: Gamification & NGO Toolkit
-  { id: 22, icon: "🎮", name: "XP & Streak System", category: "Gamification", desc: "Gamified progression tracked directly via LocalStorage." },
-  { id: 23, icon: "🏆", name: "7 Rights Badges Grid", category: "Gamification", desc: "Unlockable visual badges for completed town scenarios." },
-  { id: 24, icon: "🎓", name: "Canvas Certificate Generator", category: "Gamification", desc: "Render customizable downloadable 'Rights Champion' certificates." },
-  { id: 25, icon: "🎒", name: "School Workshop Presentation Mode", category: "Toolkit", desc: "Full-screen presentation view for classroom smartboards." },
-  { id: 26, icon: "🖨️", name: "Printable Worksheet Generator", category: "Toolkit", desc: "Auto-formatted offline worksheets for NGO educators." },
-  { id: 27, icon: "📊", name: "Teacher Assessment Rubric", category: "Toolkit", desc: "Evaluator scoring framework for student legal awareness." },
-  { id: 28, icon: "🌐", name: "Bilingual Language Switcher", category: "Toolkit", desc: "Instant toggle between English and Hindi text strings." },
-  { id: 29, icon: "🔊", name: "Web Audio Sound Engine", category: "Toolkit", desc: "Native browser-synthesized audio feedback on clicks." },
-  { id: 30, icon: "💾", name: "LocalStorage Privacy Manager", category: "Toolkit", desc: "Zero-backend client data persistence engine." }
+  { id: 25, name: "Media Station", district: "Awareness", icon: "📻", color: "#a855f7", law: "Right to Expression & Voice" },
+  { id: 26, name: "Open Theatre", district: "Awareness", icon: "🎭", color: "#9333ea", law: "Cultural Rights Awareness" },
+  { id: 27, name: "Rights Academy", district: "Awareness", icon: "📖", color: "#7e22ce", law: "Constitutional Awareness Training" },
+  { id: 28, name: "Innovation Hub", district: "Awareness", icon: "💡", color: "#6b21a8", law: "Child Rights Tech Development" },
+  { id: 29, name: "Advocacy Forum", district: "Awareness", icon: "📢", color: "#581c87", law: "Child Participation Rights" },
+  { id: 30, name: "Hall of Champions", district: "Awareness", icon: "🏆", color: "#f3e8ff", law: "Master Rights Certification" }
 ];
 
-let unlockedModules = JSON.parse(localStorage.getItem('saksham_unlocked_30')) || [];
+let unlockedList = JSON.parse(localStorage.getItem('saksham_buildings_30')) || [];
 
-function render30Modules() {
-  const container = document.getElementById('modules-30-grid');
-  if (!container) return;
+function inject30Buildings() {
+  // Look for existing town container or create a grid dynamically
+  let target = document.querySelector('.town') || document.getElementById('town-svg-container');
+  
+  if (!target) {
+    // Fallback: create a container at the top of main if missing
+    target = document.createElement('div');
+    target.id = 'dynamic-30-grid';
+    target.style.cssText = 'max-width:1200px; margin: 2rem auto; padding: 1rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;';
+    document.body.appendChild(target);
+  }
 
-  container.innerHTML = MODULES_DATA.map(mod => {
-    const isUnlocked = unlockedModules.includes(mod.id);
+  target.innerHTML = BUILDINGS_30.map(b => {
+    const done = unlockedList.includes(b.id);
     return `
-      <div class="mod-card ${isUnlocked ? 'unlocked' : ''}" onclick="openModuleModal(${mod.id})">
-        <span class="mod-num">#${mod.id}</span>
-        <div class="mod-icon">${mod.icon}</div>
-        <h4>${mod.name}</h4>
-        <p>${mod.desc}</p>
-        <span class="mod-status">${isUnlocked ? '🟢 Completed' : '🔒 Tap to Explore'}</span>
+      <div onclick="openSakshamModal(${b.id})" style="background: ${done ? 'rgba(16, 185, 129, 0.15)' : 'rgba(255,255,255,0.08)'}; border: 2px solid ${done ? '#10b981' : 'rgba(255,255,255,0.2)'}; border-radius: 16px; padding: 1rem; text-align: center; cursor: pointer; transition: transform 0.2s;">
+        <span style="font-size: 2.5rem; display:block; margin-bottom:0.5rem;">${b.icon}</span>
+        <h4 style="color: #fff; font-size: 1rem; margin-bottom: 0.2rem;">#${b.id} ${b.name}</h4>
+        <p style="color: #94a3b8; font-size: 0.75rem;">${b.district}</p>
+        <span style="display:inline-block; margin-top:0.5rem; font-size:0.7rem; font-weight:bold; color:${done ? '#10b981' : '#fbbf24'};">${done ? '🟢 Completed' : '🔒 Explore'}</span>
       </div>
     `;
   }).join('');
-
-  const progressCount = document.getElementById('total-progress-count');
-  if (progressCount) progressCount.innerText = `${unlockedModules.length} / 30 Unlocked`;
 }
 
-function openModuleModal(id) {
-  const mod = MODULES_DATA.find(m => m.id === id);
-  if (!mod) return;
-
-  const modal = document.getElementById('scenario-modal');
-  const body = document.getElementById('modal-body');
-
-  if (mod.story && mod.choices) {
-    body.innerHTML = `
-      <h3>${mod.icon} Module #${mod.id}:${mod.name}</h3>
-      <p style="margin: 1rem 0; color: #cbd5e1; font-size: 1.05rem;">${mod.story}</p>
-      <div style="display:flex; flex-direction:column; gap:0.75rem;">
-        ${mod.choices.map(c => `
-          <button class="btn-primary" onclick="handleChoice(${mod.id}, ${c.correct}, '${c.feedback}')">
-            ${c.text}
-          </button>
-        `).join('')}
-      </div>
-    `;
+function openSakshamModal(id) {
+  const b = BUILDINGS_30.find(i => i.id === id);
+  
+  // Check if modal already exists, else create one
+  let modal = document.getElementById('scenario-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'scenario-modal';
+    modal.style.cssText = 'position:fixed; inset:0; background:rgba(0,0,0,0.8); display:flex; align-items:center; justify-content:center; z-index:9999;';
+    modal.innerHTML = `<div id="modal-box" style="background:#1e1b4b; padding:2rem; border-radius:20px; max-width:450px; width:90%; color:#fff; position:relative;">
+      <button onclick="document.getElementById('scenario-modal').style.display='none'" style="position:absolute; top:1rem; right:1rem; background:none; border:none; color:#fff; font-size:1.5rem; cursor:pointer;">✕</button>
+      <div id="modal-body"></div>
+    </div>`;
+    document.body.appendChild(modal);
   } else {
-    body.innerHTML = `
-      <h3>${mod.icon} Module #${mod.id}:${mod.name}</h3>
-      <p style="margin: 1rem 0; color: #cbd5e1;">${mod.desc}</p>
-      <span style="color: #fbbf24; font-weight: 700;">Category: ${mod.category}</span>
-      <button class="btn-primary" style="margin-top: 1.5rem;
+    modal.style.display = 'flex';
+  }
+
+  document.getElementById('modal-body').innerHTML = `
+    <div style="text-align:center;">
+      <span style="font-size: 3rem;">${b.icon}</span>
+      <h2 style="margin: 0.5rem 0; color:#fff;">${b.name}</h2>
+      <p style="color:#fbbf24; font-weight:bold; margin-bottom:1rem;">District: ${b.district}</p>
+      <p style="background:rgba(255,255,255,0.05); padding:1rem; border-radius:12px; margin-bottom:1.5rem; text-align:left; color:#cbd5e1;">⚖️ <strong>Law:</strong> ${b.law}</p>
+      <button onclick="markBuildingDone(${b.id})" style="background:#6366f1; color:white; border:none; padding:0.75rem 1.5rem; border-radius:999px; font-weight:bold; cursor:pointer; width:100%;">Mark Completed ✅</button>
+    </div>
+  `;
+}
+
+function markBuildingDone(id) {
+  if (!unlockedList.includes(id)) {
+    unlockedList.push(id);
+    localStorage.setItem('saksham_buildings_30', JSON.stringify(unlockedList));
+    inject30Buildings();
+  }
+  document.getElementById('scenario-modal').style.display = 'none';
+}
+
+window.addEventListener('DOMContentLoaded', inject30Buildings);

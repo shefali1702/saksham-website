@@ -300,6 +300,9 @@ body {
   cursor: pointer;
 }
 
+
+
+
 /* Animations */
 @keyframes float {
   0%, 100% { transform: translateY(0); }
@@ -309,4 +312,23 @@ body {
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+
+
+
+/* ==========================================
+   SAKSHAM — EMERGENCY DISPLAY OVERRIDE
+   ========================================== */
+#forced-30-modules-grid, 
+.tab-content.active, 
+.content-wrapper {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+#forced-30-modules-grid > div {
+  background: rgba(15, 23, 42, 0.95) !important;
+  border: 2px solid #6366f1 !important;
 }

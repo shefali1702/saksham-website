@@ -275,6 +275,15 @@ footer .row{justify-content:flex-start;margin-top:10px}
 @keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 @media print{.top,.fab,.chat,.modal,.bokeh,#confetti,.noprint{display:none!important}body{background:#fff}.clay,.glass{box-shadow:none!important;border:1px solid #ccc}.key{display:block!important}.view{animation:none}}
+
+.segs{flex-wrap:wrap;gap:2px;max-width:150px}
+.segs .seg,.segs .seg.on{width:6px;height:12px}
+
+.tnav{display:flex;align-items:center;justify-content:center;gap:12px;margin:14px 0 4px;flex-wrap:wrap}
+.tdots{display:flex;gap:4px;align-items:center}
+.tdot{width:14px;height:14px;border-radius:50%;border:0;background:rgba(255,255,255,.7);box-shadow:inset 0 0 0 2px rgba(120,80,80,.25);cursor:pointer;padding:0;margin:0 2px}
+.tdot.on{background:#ff8470;transform:scale(1.3)}
+.tlbl{font-weight:800;min-width:78px;text-align:center}
 </style>
 </head>
 <body>
@@ -339,6 +348,7 @@ footer .row{justify-content:flex-start;margin-top:10px}
 <script>
 (function(){
 'use strict';
+var townPage=null;
 var $=function(s,r){return (r||document).querySelector(s)};
 var esc=function(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
 var shuffle=function(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a};
@@ -348,6 +358,7 @@ function T(x){return x==null?'':(typeof x==='string'?x:(x[lang]||x.en||''))}
 
 /* =============== UI STRINGS =============== */
 var UI={
+ area:L('Area','इलाका','பகுதி','ప్రాంతం','ਇਲਾਕਾ'),
  tagline:L('Every Child, Every Right.','हर बच्चा, हर अधिकार।','ஒவ்வொரு குழந்தை, ஒவ்வொரு உரிமை.','ప్రతి బిడ్డ, ప్రతి హక్కు.','ਹਰ ਬੱਚਾ, ਹਰ ਅਧਿਕਾਰ।'),
  teacher:L('Teacher','शिक्षक','ஆசிரியர்','ఉపాధ్యాయులు','ਅਧਿਆਪਕ'),
  help:L('Help','मदद','உதவி','సహాయం','ਮਦਦ'),
@@ -433,6 +444,7 @@ var H={
  head:L('Class teacher or headmaster','कक्षा शिक्षक या प्रधानाध्यापक','வகுப்பாசிரியர் அல்லது தலைமையாசிரியர்','క్లాస్ టీచర్ లేదా ప్రధానోపాధ్యాయులు','ਜਮਾਤ ਅਧਿਆਪਕ ਜਾਂ ਮੁੱਖ ਅਧਿਆਪਕ'),
  deo:L('District Education Officer','जिला शिक्षा अधिकारी','மாவட்டக் கல்வி அலுவலர்','జిల్లా విద్యాశాఖ అధికారి','ਜ਼ਿਲ੍ਹਾ ਸਿੱਖਿਆ ਅਧਿਕਾਰੀ')
 };
+var H2={legal:L('Free legal aid helpline 15100'),cyber:L('Cyber crime helpline 1930 or cybercrime.gov.in'),mind:L('Tele-MANAS 14416 (free)'),asha:L('ASHA worker or health centre'),aww:L('Anganwadi worker')};for(var hk in H2)H[hk]=H2[hk];
 var RIGHTS=[
 {
  id:'education',icon:'🏫',color:'#e9826c',
@@ -630,6 +642,1249 @@ var RIGHTS=[
   obj:[L('Children know the legal marriage age (18 for girls, 21 for boys).','बच्चे शादी की क़ानूनी उम्र (लड़कियाँ 18, लड़के 21) जानें।'),L('Children learn who can stop a child marriage and how to report.','बच्चे जानें कि बाल विवाह कौन रोक सकता है और शिकायत कैसे करें।')],
   disc:[L('What can education change in a girl\'s future?','शिक्षा किसी लड़की के भविष्य में क्या बदल सकती है?'),L('How can a teacher talk kindly with a family about the law?','शिक्षक किसी परिवार से क़ानून पर प्यार से बात कैसे कर सकता है?')],
   act:L('Class writes a short kind letter from Priya to her family about why she wants to finish school.','कक्षा मिलकर प्रिया की ओर से परिवार को एक छोटा, स्नेह भरा पत्र लिखे कि वह स्कूल क्यों पूरा करना चाहती है।')}
+},
+{
+ id:'legalaid',icon:'⚖️',color:'#8e7cc3',
+ place:L("Legal Aid Office"),
+ title:L("Right to Free Legal Aid"),
+ blurb:L("A family cannot afford a lawyer. Is there any help?"),
+ chars:{
+  asha:{name:L("Asha"),girl:true,shirt:'#ff8fa3',hair:'#1c120d',skin:'#e0ac80'},
+  baba:{name:L("Baba"),adult:true,acc:'mustache',shirt:'#4fb5b0',hair:'#1c120d',skin:'#d79e70'},
+  vakil:{name:L("Lawyer Didi"),girl:true,adult:true,acc:'glasses',shirt:'#7fc77a',hair:'#1c120d',skin:'#c98d62'}
+ },
+ steps:[
+  {t:'story',bg:'home',prop:'⚖️',text:L("A neighbour wants to take the small field that feeds Asha's family. Baba has the papers, but they cannot afford a lawyer."),
+   cast:[{who:'asha',mood:'worried',say:L("Baba, who will speak for us in court?")},{who:'baba',mood:'sad'}]},
+  {t:'story',bg:'school',prop:'📜',text:L("At school, Asha hears about a free legal aid centre in the district."),
+   cast:[{who:'vakil',mood:'happy',say:L("Anyone who cannot afford a lawyer can get one free.")},{who:'asha',mood:'surprised'}]},
+  {t:'choice',bg:'field',prop:'🌾',text:L("What should Asha's family do?"),
+   cast:[{who:'asha',mood:'worried'},{who:'baba',mood:'sad'}],
+   options:[
+    {label:L("Visit the District Legal Services Authority or call 15100 for a free lawyer."),ok:true,bg:'school',
+     text:L("A legal aid lawyer studies the papers and speaks for the family in court at no cost. The field stays with them."),
+     cast:[{who:'vakil',mood:'happy'},{who:'asha',mood:'happy',wave:true},{who:'baba',mood:'happy'}]},
+    {label:L("Give up the field. Lawyers cost too much."),ok:false,bg:'field',
+     text:L("The neighbour takes the field and the family loses its income, even though the law was on their side. Giving up is not the only choice."),
+     cast:[{who:'baba',mood:'sad'}]},
+    {label:L("Pay a stranger who promises to fix it fast."),ok:false,bg:'home',
+     text:L("The stranger takes the money and does nothing. Always use official free legal aid instead of paying unknown people."),
+     cast:[{who:'asha',mood:'worried'},{who:'baba',mood:'sad'}]}
+   ]}
+ ],
+ law:{act:L("Legal Services Authorities Act, 1987 (Article 39A)"),
+  points:[
+   L("Children, women, people from SC/ST communities, persons with disabilities and people with low income can get a free lawyer."),
+   L("Free legal aid is given by the National, State and District Legal Services Authorities."),
+   L("Every district has a Legal Services Authority at the district court."),
+   L("The legal aid helpline 15100 can guide you. Help is free.")],
+  remember:L("Justice is not only for those who can pay."),
+  help:[H.legal,H.child,H.sarpanch]},
+ quiz:[
+  {q:L("Who can get a free lawyer?"),o:[L("Only rich families"),L("Only adults"),L("Children and people who cannot afford one")],a:2},
+  {q:L("Which helpline guides you to free legal aid?"),o:[L("999"),L("15100"),L("1800")],a:1},
+  {q:L("Where can a family find a Legal Services Authority?"),o:[L("Only in one city"),L("In every district"),L("Only abroad")],a:1}
+ ],
+ teach:{
+  obj:[L("Explain that free legal aid exists for those who cannot afford a lawyer."),L("Show children how to find the district legal aid office or 15100.")],
+  disc:[L("Why is it unfair if only rich people can use the courts?"),L("Who in our village or town could help a family find legal aid?")],
+  act:L("Make a poster: 'Free lawyer? Call 15100'.")}
+},
+{
+ id:'identity',icon:'🪪',color:'#c9a227',
+ place:L("Registry Office"),
+ title:L("Right to a Name and Identity"),
+ blurb:L("Kiran has no birth certificate. Will he lose his place in school?"),
+ chars:{
+  kiran:{name:L("Kiran"),shirt:'#6aa5ff',hair:'#1c120d',skin:'#d79e70'},
+  amma:{name:L("Amma"),girl:true,adult:true,acc:'scarf',scarf:'#d9609a',shirt:'#d9609a',hair:'#1c120d',skin:'#c98d62'},
+  clerk:{name:L("Registrar"),adult:true,acc:'glasses',shirt:'#4dbdb5',hair:'#1c120d',skin:'#d09a6e'}
+ },
+ steps:[
+  {t:'story',bg:'home',prop:'🪪',text:L("Kiran was born at home and never got a birth certificate. Now his school asks for proof of age."),
+   cast:[{who:'amma',mood:'worried',say:L("We never made one. What will we do?")},{who:'kiran',mood:'sad'}]},
+  {t:'story',bg:'school',prop:'🏫',text:L("Kiran is afraid he will be sent away from class."),
+   cast:[{who:'kiran',mood:'worried',say:L("Will they stop me from studying?")}]},
+  {t:'choice',bg:'home',prop:'📄',text:L("What should Kiran's family do?"),
+   cast:[{who:'kiran',mood:'worried'},{who:'amma',mood:'worried'}],
+   options:[
+    {label:L("Stop sending Kiran to school."),ok:false,bg:'home',
+     text:L("Kiran loses months of study. No child should leave school only because a paper is missing."),
+     cast:[{who:'kiran',mood:'sad'}]},
+    {label:L("Ask the teacher for help and register the birth at the local registrar or panchayat office."),ok:true,bg:'school',
+     text:L("The registrar explains the late registration process and helps the family. Meanwhile Kiran keeps attending school and gets his certificate."),
+     cast:[{who:'clerk',mood:'happy'},{who:'kiran',mood:'happy',wave:true},{who:'amma',mood:'happy'}]},
+    {label:L("Hide his age and make up a date."),ok:false,bg:'home',
+     text:L("A false date can cause problems for years. There is a proper, free way to fix this."),
+     cast:[{who:'amma',mood:'worried'},{who:'kiran',mood:'worried'}]}
+   ]}
+ ],
+ law:{act:L("Registration of Births and Deaths Act, 1969 and the RTE Act, 2009 (Section 14)"),
+  points:[
+   L("Every birth must be registered, ideally within 21 days, and the first copy is free."),
+   L("Births that were not registered in time can still be registered later through the registrar."),
+   L("A school cannot refuse admission to a child only because he has no age proof or birth certificate."),
+   L("A name and identity are part of every child's rights.")],
+  remember:L("I have a name, and I count."),
+  help:[H.head,H.sarpanch,H.child]},
+ quiz:[
+  {q:L("Can a school refuse a child only for lacking a birth certificate?"),o:[L("No, admission cannot be denied for lack of age proof"),L("Only in class 8"),L("Yes, always")],a:0},
+  {q:L("Within how many days should a birth ideally be registered?"),o:[L("365"),L("21"),L("90")],a:1},
+  {q:L("Can a late birth still be registered?"),o:[L("Never"),L("Only for girls"),L("Yes, through the registrar")],a:2}
+ ],
+ teach:{
+  obj:[L("Explain that every child has a right to a name and a registered birth."),L("Teach children that missing papers should not stop schooling.")],
+  disc:[L("Why are birth certificates useful?"),L("Who can a family ask for help with registration?")],
+  act:L("Children draw their own 'identity card' with name, village and a dream.")}
+},
+{
+ id:'vaccine',icon:'💉',color:'#4aa3a2',
+ place:L("Health Centre"),
+ title:L("Right to Health and Vaccines"),
+ blurb:L("Free vaccines at the health centre. Why does Lata hesitate?"),
+ chars:{
+  lata:{name:L("Lata"),girl:true,shirt:'#e56aa7',hair:'#1c120d',skin:'#c98d62'},
+  didi:{name:L("ASHA Didi"),girl:true,adult:true,shirt:'#b58de0',hair:'#1c120d',skin:'#d09a6e'},
+  papa:{name:L("Papa"),adult:true,shirt:'#c95b5b',hair:'#1c120d',skin:'#e8b98a'}
+ },
+ steps:[
+  {t:'story',bg:'home',prop:'🍼',text:L("Lata's baby brother is two months old. A neighbour says vaccines are dangerous, so Papa is unsure."),
+   cast:[{who:'papa',mood:'worried',say:L("People say injections make babies sick.")},{who:'lata',mood:'worried'}]},
+  {t:'story',bg:'school',prop:'🩺',text:L("ASHA Didi, the village health worker, comes to visit."),
+   cast:[{who:'didi',mood:'happy',say:L("Vaccines are free and protect babies from serious diseases.")}]},
+  {t:'choice',bg:'home',prop:'💉',text:L("What should Lata do?"),
+   cast:[{who:'lata',mood:'worried'},{who:'papa',mood:'worried'},{who:'didi',mood:'happy'}],
+   options:[
+    {label:L("Skip the vaccines to be safe."),ok:false,bg:'home',
+     text:L("The baby is not protected. Diseases like measles, polio and whooping cough can be serious for unvaccinated children."),
+     cast:[{who:'lata',mood:'sad'}]},
+    {label:L("Believe the neighbour's forwarded message."),ok:false,bg:'home',
+     text:L("Unverified messages are often wrong. Ask a health worker or doctor for real information."),
+     cast:[{who:'papa',mood:'worried'}]},
+    {label:L("Ask ASHA Didi and the doctor your questions, then take the baby for the free vaccines."),ok:true,bg:'school',
+     text:L("The doctor answers every question. The baby gets vaccines on schedule and the family keeps the vaccination card safe."),
+     cast:[{who:'didi',mood:'happy'},{who:'papa',mood:'happy'},{who:'lata',mood:'happy',wave:true}]}
+   ]}
+ ],
+ law:{act:L("Universal Immunisation Programme and Article 21 (Right to Life and Health)"),
+  points:[
+   L("Government health centres give childhood vaccines free of cost."),
+   L("Vaccines protect children from diseases like polio, measles, TB and diphtheria."),
+   L("Keep the child's vaccination card safe and bring it to every visit."),
+   L("ASHA workers and Anganwadi workers help families with the schedule.")],
+  remember:L("Healthy children are a right, and vaccines help protect them."),
+  help:[H.asha,H.head,H.child]},
+ quiz:[
+  {q:L("Are childhood vaccines at government centres free?"),o:[L("Yes"),L("Only for adults"),L("No")],a:0},
+  {q:L("Who can answer questions about vaccines?"),o:[L("Nobody"),L("A random forwarded message"),L("A health worker or doctor")],a:2},
+  {q:L("What should you keep safe?"),o:[L("Nothing"),L("Old bills"),L("Vaccination card")],a:2}
+ ],
+ teach:{
+  obj:[L("Explain that free vaccines are part of the right to health."),L("Teach children to trust health workers over rumours.")],
+  disc:[L("Why can rumours be harmful?"),L("How can we check if health news is true?")],
+  act:L("Make a 'Check before you share' card for health messages.")}
+},
+{
+ id:'meal',icon:'🍛',color:'#e08a3c',
+ place:L("School Kitchen"),
+ title:L("Right to a Mid-Day Meal"),
+ blurb:L("Some children are kept in a separate line at lunch."),
+ chars:{
+  sana:{name:L("Sana"),girl:true,shirt:'#5a9cf0',hair:'#1c120d',skin:'#d09a6e'},
+  rohan:{name:L("Rohan"),shirt:'#f0b34a',hair:'#1c120d',skin:'#e8b98a'},
+  cook:{name:L("Cook Aunty"),girl:true,adult:true,shirt:'#8a8fa3',hair:'#1c120d',skin:'#e0ac80'},
+  sir:{name:L("Principal Sir"),adult:true,acc:'glasses',shirt:'#ff8fa3',hair:'#1c120d',skin:'#d79e70'}
+ },
+ steps:[
+  {t:'story',bg:'school',prop:'🍛',text:L("Every day the school serves a free hot meal. But today the cook asks Rohan and Sana to sit apart from the other children."),
+   cast:[{who:'cook',mood:'angry',say:L("You two sit at the back.")},{who:'sana',mood:'sad'}]},
+  {t:'story',bg:'school',prop:'🥣',text:L("Rohan stops eating. He says he would rather go hungry."),
+   cast:[{who:'rohan',mood:'sad',say:L("I do not want to eat alone.")}]},
+  {t:'choice',bg:'school',prop:'🍛',text:L("What should Sana do?"),
+   cast:[{who:'sana',mood:'worried'},{who:'rohan',mood:'sad'}],
+   options:[
+    {label:L("Tell Principal Sir. Every child has the same right to the meal, sitting together."),ok:true,bg:'school',
+     text:L("The principal speaks to the cook and the staff. All children eat together, and the school displays the meal menu on the wall."),
+     cast:[{who:'sir',mood:'happy'},{who:'sana',mood:'happy',wave:true},{who:'rohan',mood:'happy'}]},
+    {label:L("Stay silent. It is only lunch."),ok:false,bg:'school',
+     text:L("Children go hungry and feel ashamed. The meal is a right for every child, not a favour."),
+     cast:[{who:'rohan',mood:'sad'}]},
+    {label:L("Refuse to eat the school meal forever."),ok:false,bg:'home',
+     text:L("Going hungry hurts you most. It is better to report the problem to someone who can fix it."),
+     cast:[{who:'sana',mood:'worried'}]}
+   ]}
+ ],
+ law:{act:L("National Food Security Act, 2013 (PM POSHAN scheme)"),
+  points:[
+   L("Children in classes 1 to 8 in government and aided schools have a right to a free, hot cooked meal on school days."),
+   L("Food must be served without discrimination by caste, religion or gender."),
+   L("Children can tell the headmaster or the School Management Committee if the meal is not served or is poor."),
+   L("Hygiene and quality are the school's responsibility.")],
+  remember:L("Every child has an equal place at the table."),
+  help:[H.head,H.teacher,H.deo]},
+ quiz:[
+  {q:L("Who has a right to the mid-day meal?"),o:[L("Every child in classes 1 to 8 of eligible schools"),L("Only teachers"),L("Only some children")],a:0},
+  {q:L("Can children be made to sit separately by caste?"),o:[L("Yes"),L("Only sometimes"),L("No, it is not allowed")],a:2},
+  {q:L("Who can you tell if the meal is not given?"),o:[L("Nobody"),L("The headmaster"),L("The cook only")],a:1}
+ ],
+ teach:{
+  obj:[L("Explain that the school meal is a right, served equally."),L("Teach children to report unfair treatment to a trusted adult.")],
+  disc:[L("Why does eating together matter?"),L("How can a school make sure meals are fair?")],
+  act:L("Class designs a fair-meal charter for the school wall.")}
+},
+{
+ id:'corporal',icon:'✋',color:'#d95d5d',
+ place:L("Classroom"),
+ title:L("Protection from Punishment in School"),
+ blurb:L("A teacher hits a child for a wrong answer."),
+ chars:{
+  farah:{name:L("Farah"),girl:true,shirt:'#ff8fa3',hair:'#1c120d',skin:'#e8b98a'},
+  zaid:{name:L("Zaid"),shirt:'#4fb5b0',hair:'#1c120d',skin:'#e0ac80'},
+  mr:{name:L("Strict Sir"),adult:true,acc:'mustache',shirt:'#7fc77a',hair:'#1c120d',skin:'#d79e70'},
+  head:{name:L("Headmistress"),girl:true,adult:true,acc:'glasses',shirt:'#6aa5ff',hair:'#1c120d',skin:'#c98d62'}
+ },
+ steps:[
+  {t:'story',bg:'school',prop:'📝',text:L("Zaid gets a sum wrong. Strict Sir hits his hand with a ruler in front of everyone."),
+   cast:[{who:'mr',mood:'angry',say:L("Learn it properly!")},{who:'zaid',mood:'sad'}]},
+  {t:'story',bg:'school',prop:'😢',text:L("Zaid is afraid to come to school the next day."),
+   cast:[{who:'zaid',mood:'worried',say:L("I do not want to go back.")},{who:'farah',mood:'worried'}]},
+  {t:'choice',bg:'school',prop:'✋',text:L("What should Farah and Zaid do?"),
+   cast:[{who:'farah',mood:'worried'},{who:'zaid',mood:'sad'}],
+   options:[
+    {label:L("Say nothing. Teachers are always right."),ok:false,bg:'school',
+     text:L("Zaid keeps being afraid and his learning suffers. Fear does not help children learn."),
+     cast:[{who:'zaid',mood:'sad'}]},
+    {label:L("Tell parents and the Headmistress. Hitting a child in school is not allowed."),ok:true,bg:'school',
+     text:L("The Headmistress listens, speaks to the teacher and records the complaint. Classes become calmer and kinder."),
+     cast:[{who:'head',mood:'happy'},{who:'zaid',mood:'happy',wave:true},{who:'farah',mood:'happy'}]},
+    {label:L("Hit the teacher back."),ok:false,bg:'school',
+     text:L("That puts you in danger and trouble. Report it safely instead."),
+     cast:[{who:'farah',mood:'worried'}]}
+   ]}
+ ],
+ law:{act:L("Right to Education Act, 2009 (Section 17)"),
+  points:[
+   L("No child can be physically punished or mentally harassed in school."),
+   L("A teacher who does so can face disciplinary action."),
+   L("Children can complain to the headmaster, the School Management Committee or the education officer."),
+   L("Learning grows with encouragement, not fear.")],
+  remember:L("Learning should never hurt."),
+  help:[H.head,H.deo,H.child]},
+ quiz:[
+  {q:L("Can a teacher legally hit a child in school?"),o:[L("Only for older children"),L("No, it is not allowed"),L("Yes, to teach discipline")],a:1},
+  {q:L("Who can you complain to first?"),o:[L("A stranger"),L("Nobody"),L("Headmaster or parents")],a:2},
+  {q:L("What helps learning most?"),o:[L("Shouting"),L("Fear"),L("Encouragement")],a:2}
+ ],
+ teach:{
+  obj:[L("Explain that corporal punishment and humiliation are illegal."),L("Teach children how to complain safely.")],
+  disc:[L("How can teachers correct mistakes without fear?"),L("Who should a child tell if they are hurt at school?")],
+  act:L("Class writes five 'kind classroom rules'.")}
+},
+{
+ id:'bully',icon:'🛡️',color:'#6a8fd8',
+ place:L("School Ground"),
+ title:L("Protection from Bullying"),
+ blurb:L("Jay is teased every day and nobody helps."),
+ chars:{
+  jay:{name:L("Jay"),shirt:'#6aa5ff',hair:'#1c120d',skin:'#e0ac80'},
+  mira:{name:L("Mira"),girl:true,shirt:'#d9609a',hair:'#1c120d',skin:'#d79e70'},
+  bully:{name:L("Vicky"),shirt:'#4dbdb5',hair:'#1c120d',skin:'#c98d62'},
+  miss:{name:L("Counsellor Miss"),girl:true,adult:true,shirt:'#e56aa7',hair:'#1c120d',skin:'#d09a6e'}
+ },
+ steps:[
+  {t:'story',bg:'school',prop:'😞',text:L("Vicky and his friends call Jay names and hide his bag every day."),
+   cast:[{who:'bully',mood:'angry',say:L("Hey, loser!")},{who:'jay',mood:'sad'}]},
+  {t:'story',bg:'school',prop:'👀',text:L("Mira sees it happen. She is worried but nervous."),
+   cast:[{who:'mira',mood:'worried',say:L("This is not okay. What can I do?")}]},
+  {t:'choice',bg:'school',prop:'🛡️',text:L("What should Mira do?"),
+   cast:[{who:'mira',mood:'worried'},{who:'jay',mood:'sad'}],
+   options:[
+    {label:L("Laugh along so Vicky does not tease her."),ok:false,bg:'school',
+     text:L("The bullying gets worse, and Jay feels completely alone. Joining in hurts people."),
+     cast:[{who:'jay',mood:'sad'}]},
+    {label:L("Hit Vicky."),ok:false,bg:'school',
+     text:L("Violence makes things worse and puts you in trouble. Get a trusted adult involved instead."),
+     cast:[{who:'mira',mood:'worried'}]},
+    {label:L("Stand with Jay, and tell a teacher or counsellor together."),ok:true,bg:'school',
+     text:L("The school talks to Vicky, supports Jay and starts an anti-bullying circle. Jay feels safe again."),
+     cast:[{who:'miss',mood:'happy'},{who:'mira',mood:'happy',wave:true},{who:'jay',mood:'happy'}]}
+   ]}
+ ],
+ law:{act:L("RTE Act, 2009 (Section 17), School Safety Guidelines (Ministry of Education) and the IT Act, 2000 for online abuse"),
+  points:[
+   L("Schools must keep children safe from physical and mental harassment, including bullying."),
+   L("Many schools must have a complaint system and a safety committee."),
+   L("Online bullying and sharing hurtful images can be reported as cyber offences."),
+   L("Standing up with a friend and telling an adult is brave and helpful.")],
+  remember:L("Kindness is strength. Speak up for others."),
+  help:[H.teacher,H.head,H.child]},
+ quiz:[
+  {q:L("Is bullying okay if it is 'just a joke'?"),o:[L("Yes"),L("No, it hurts people"),L("Only sometimes")],a:1},
+  {q:L("What helps most when you see bullying?"),o:[L("Join in"),L("Support the child and tell an adult"),L("Ignore it")],a:1},
+  {q:L("Can online bullying be reported?"),o:[L("No"),L("Yes"),L("Only to friends")],a:1}
+ ],
+ teach:{
+  obj:[L("Explain that bullying is harmful and not acceptable."),L("Teach children to support peers and report safely.")],
+  disc:[L("How does bullying feel for the child?"),L("What can a bystander do safely?")],
+  act:L("Class creates a 'be a buddy' pledge.")}
+},
+{
+ id:'online',icon:'📱',color:'#3aa6c4',
+ place:L("Cyber Cafe"),
+ title:L("Staying Safe Online"),
+ blurb:L("A stranger online asks Neha for photos."),
+ chars:{
+  neha:{name:L("Neha"),girl:true,shirt:'#e56aa7',hair:'#1c120d',skin:'#d79e70'},
+  bhai:{name:L("Bhaiya"),adult:true,shirt:'#b58de0',hair:'#1c120d',skin:'#c98d62'},
+  stranger:{name:L("Online Friend"),adult:true,shirt:'#c95b5b',hair:'#1c120d',skin:'#d09a6e'}
+ },
+ steps:[
+  {t:'story',bg:'home',prop:'📱',text:L("Neha chats with a new 'friend' online who says he is her age. He is kind and gives compliments."),
+   cast:[{who:'stranger',mood:'happy',say:L("You are so mature. Send me a photo and keep it secret.")},{who:'neha',mood:'worried'}]},
+  {t:'story',bg:'home',prop:'🤔',text:L("The messages become uncomfortable. He asks for private pictures and tells her not to tell anyone."),
+   cast:[{who:'neha',mood:'worried',say:L("This feels wrong.")}]},
+  {t:'choice',bg:'home',prop:'📱',text:L("What should Neha do?"),
+   cast:[{who:'neha',mood:'worried'}],
+   options:[
+    {label:L("Stop replying, take screenshots, block him, tell a trusted adult and report it."),ok:true,bg:'home',
+     text:L("Her brother helps her report the account at cybercrime.gov.in. Neha is not blamed. She did the right thing."),
+     cast:[{who:'bhai',mood:'happy'},{who:'neha',mood:'happy',wave:true}]},
+    {label:L("Send the photos so he stays friendly."),ok:false,bg:'home',
+     text:L("Private pictures can be misused and spread. Real friends never pressure you or ask for secrets."),
+     cast:[{who:'neha',mood:'sad'}]},
+    {label:L("Meet him alone to sort things out."),ok:false,bg:'home',
+     text:L("Meeting an online stranger alone is dangerous. Always involve a trusted adult."),
+     cast:[{who:'neha',mood:'worried'}]}
+   ]}
+ ],
+ law:{act:L("IT Act, 2000 (Section 67B) and POCSO Act, 2012"),
+  points:[
+   L("Sharing, asking for or keeping sexual images of a child is a serious crime."),
+   L("A child who is pressured online is never at fault."),
+   L("Report at cybercrime.gov.in or call 1930. Childline 1098 also helps."),
+   L("Do not share passwords, photos or your address with people you only know online.")],
+  remember:L("My safety comes first. I can block, tell and report."),
+  help:[H.cyber,H.child,H.trusted]},
+ quiz:[
+  {q:L("Who is at fault if an adult pressures a child online?"),o:[L("The adult"),L("The child"),L("Both")],a:0},
+  {q:L("What should you do first when a stranger makes you uncomfortable?"),o:[L("Share more"),L("Keep it secret"),L("Stop, save proof and tell a trusted adult")],a:2},
+  {q:L("Where can cyber crimes be reported?"),o:[L("Only at school"),L("Nowhere"),L("cybercrime.gov.in")],a:2}
+ ],
+ teach:{
+  obj:[L("Explain basic online safety and reporting."),L("Teach children that secrets that scare them should be told.")],
+  disc:[L("What information should never be shared online?"),L("Who are our trusted adults for online worries?")],
+  act:L("Children list three online safety rules without sharing personal stories.")}
+},
+{
+ id:'trafficking',icon:'🚆',color:'#9a6fb0',
+ place:L("Railway Station"),
+ title:L("Protection from Trafficking"),
+ blurb:L("A stranger offers a city job to Sunita."),
+ chars:{
+  sunita:{name:L("Sunita"),girl:true,shirt:'#5a9cf0',hair:'#1c120d',skin:'#c98d62'},
+  agent:{name:L("Agent Uncle"),adult:true,acc:'mustache',shirt:'#f0b34a',hair:'#1c120d',skin:'#d09a6e'},
+  guard:{name:L("Station Guard"),adult:true,shirt:'#8a8fa3',hair:'#1c120d',skin:'#e8b98a'},
+  didi:{name:L("Childline Didi"),girl:true,adult:true,acc:'glasses',shirt:'#ff8fa3',hair:'#1c120d',skin:'#e0ac80'}
+ },
+ steps:[
+  {t:'story',bg:'home',prop:'🚆',text:L("A well-dressed man tells Sunita's family he will find her a good job in the city and pay for everything."),
+   cast:[{who:'agent',mood:'happy',say:L("She will earn well. Just send her with me today.")},{who:'sunita',mood:'worried'}]},
+  {t:'story',bg:'home',prop:'😟',text:L("Sunita feels something is wrong. No papers, no address, no phone number."),
+   cast:[{who:'sunita',mood:'worried',say:L("Where exactly will I work?")}]},
+  {t:'choice',bg:'home',prop:'🚆',text:L("What should Sunita do?"),
+   cast:[{who:'sunita',mood:'worried'}],
+   options:[
+    {label:L("Go with him. He seems nice."),ok:false,bg:'home',
+     text:L("Promises of easy jobs are a common trick. Children can be trapped, forced to work and kept away from family."),
+     cast:[{who:'sunita',mood:'sad'}]},
+    {label:L("Refuse, tell a teacher or call Childline 1098 or 112."),ok:true,bg:'school',
+     text:L("The authorities check the man's claims. He cannot show any papers. The family is protected and Sunita stays safe at home and in school."),
+     cast:[{who:'didi',mood:'happy'},{who:'sunita',mood:'happy',wave:true}]},
+    {label:L("Leave quietly at night to look for work alone."),ok:false,bg:'home',
+     text:L("Going alone is dangerous. Safe help is available through trusted adults and Childline."),
+     cast:[{who:'sunita',mood:'worried'}]}
+   ]}
+ ],
+ law:{act:L("Article 23 of the Constitution and the Immoral Traffic (Prevention) Act, 1956"),
+  points:[
+   L("Trafficking of human beings and forced labour are banned by the Constitution."),
+   L("Taking, selling or moving a child for work or exploitation is a serious crime."),
+   L("Anyone can report suspicious cases to Childline 1098 or the police at 112."),
+   L("A child who has been trafficked is a victim, never a criminal, and is entitled to protection.")],
+  remember:L("A real job offer never needs secrecy or hurry."),
+  help:[H.child,H.police,H.teacher]},
+ quiz:[
+  {q:L("Is it safe to go with a stranger who promises a job?"),o:[L("Only at night"),L("Yes"),L("No, always check with trusted adults")],a:2},
+  {q:L("Whom can you call to report?"),o:[L("Only a friend"),L("1098 or 112"),L("Nobody")],a:1},
+  {q:L("Is a trafficked child treated as a criminal?"),o:[L("No, as a victim to protect"),L("Sometimes"),L("Yes")],a:0}
+ ],
+ teach:{
+  obj:[L("Explain that trafficking is a crime and children are protected."),L("Teach warning signs of false job offers.")],
+  disc:[L("What are signs that an offer is not safe?"),L("How can a community watch out for children?")],
+  act:L("Class makes a poster: 'Check. Ask. Call 1098'.")}
+},
+{
+ id:'bonded',icon:'⛓️',color:'#7d8a96',
+ place:L("Brick Kiln"),
+ title:L("Freedom from Bonded Labour"),
+ blurb:L("Ramu's family works to repay a loan that never ends."),
+ chars:{
+  ramu:{name:L("Ramu"),shirt:'#ff8fa3',hair:'#1c120d',skin:'#d09a6e'},
+  maa:{name:L("Maa"),girl:true,adult:true,acc:'scarf',scarf:'#4fb5b0',shirt:'#4fb5b0',hair:'#1c120d',skin:'#e8b98a'},
+  owner:{name:L("Kiln Owner"),adult:true,acc:'mustache',shirt:'#7fc77a',hair:'#1c120d',skin:'#e0ac80'},
+  officer:{name:L("Labour Officer"),girl:true,adult:true,acc:'glasses',shirt:'#6aa5ff',hair:'#1c120d',skin:'#d79e70'}
+ },
+ steps:[
+  {t:'story',bg:'field',prop:'⛓️',text:L("Ramu's parents took a loan from the kiln owner. They work every day, but the debt never shrinks."),
+   cast:[{who:'owner',mood:'angry',say:L("You still owe me. Work harder, and the boy works too.")},{who:'ramu',mood:'sad'}]},
+  {t:'story',bg:'home',prop:'😔',text:L("Ramu cannot go to school. His family is told they cannot leave until the debt is cleared."),
+   cast:[{who:'maa',mood:'sad',say:L("We are trapped, beta.")}]},
+  {t:'choice',bg:'field',prop:'⛓️',text:L("What can Ramu do?"),
+   cast:[{who:'ramu',mood:'worried'},{who:'maa',mood:'sad'}],
+   options:[
+    {label:L("Accept it. Debts must be paid forever."),ok:false,bg:'field',
+     text:L("The family stays trapped across years. The law says this kind of forced work is not allowed."),
+     cast:[{who:'ramu',mood:'sad'}]},
+    {label:L("Steal from the owner."),ok:false,bg:'field',
+     text:L("This puts the family in more danger. Official rescue is the safe way."),
+     cast:[{who:'ramu',mood:'worried'}]},
+    {label:L("Tell a teacher or call the helpline, so the Labour Officer or District Magistrate can help."),ok:true,bg:'school',
+     text:L("Officials come, free the family and cancel the illegal debt. Ramu returns to school and the family gets support to start again."),
+     cast:[{who:'officer',mood:'happy'},{who:'ramu',mood:'happy',wave:true},{who:'maa',mood:'happy'}]}
+   ]}
+ ],
+ law:{act:L("Bonded Labour System (Abolition) Act, 1976 and Article 23"),
+  points:[
+   L("Forcing a person to work to repay a debt is illegal bonded labour."),
+   L("All bonded labour debts are legally cancelled and the person is freed."),
+   L("Freed workers are entitled to rehabilitation support."),
+   L("Anyone can inform the District Magistrate, police or Childline 1098.")],
+  remember:L("No debt can take away a person's freedom."),
+  help:[H.child,H.police,H.sarpanch]},
+ quiz:[
+  {q:L("Is bonded labour legal?"),o:[L("Only for loans"),L("No, it is banned"),L("Yes")],a:1},
+  {q:L("What happens to bonded debt once freed?"),o:[L("Nothing"),L("It is cancelled"),L("It doubles")],a:1},
+  {q:L("Who can you tell?"),o:[L("No one"),L("Only the owner"),L("Teacher, Childline, police")],a:2}
+ ],
+ teach:{
+  obj:[L("Explain that bonded labour is illegal and workers are entitled to freedom and support."),L("Teach children whom to inform.")],
+  disc:[L("Why can debt make people feel trapped?"),L("How can communities help families get fair loans?")],
+  act:L("Class discusses fair work and writes a short 'rights of workers' poem.")}
+},
+{
+ id:'play',icon:'⚽',color:'#58b368',
+ place:L("Playground"),
+ title:L("Right to Play and Rest"),
+ blurb:L("Hari is told that play is a waste of time."),
+ chars:{
+  hari:{name:L("Hari"),shirt:'#6aa5ff',hair:'#1c120d',skin:'#e8b98a'},
+  tina:{name:L("Tina"),girl:true,shirt:'#d9609a',hair:'#1c120d',skin:'#e0ac80'},
+  mamu:{name:L("Uncle"),adult:true,shirt:'#4dbdb5',hair:'#1c120d',skin:'#d79e70'},
+  coach:{name:L("PT Teacher"),girl:true,adult:true,shirt:'#e56aa7',hair:'#1c120d',skin:'#c98d62'}
+ },
+ steps:[
+  {t:'story',bg:'field',prop:'⚽',text:L("Hari loves football but his uncle says games are a waste and he should study or work all day."),
+   cast:[{who:'mamu',mood:'angry',say:L("No more playing. Books only!")},{who:'hari',mood:'sad'}]},
+  {t:'story',bg:'school',prop:'🏃',text:L("Tina tells Hari that his school has a sports period and playground."),
+   cast:[{who:'tina',mood:'happy',say:L("Play helps our health and our minds.")}]},
+  {t:'choice',bg:'field',prop:'⚽',text:L("What should Hari do?"),
+   cast:[{who:'hari',mood:'worried'},{who:'tina',mood:'happy'}],
+   options:[
+    {label:L("Talk to the PT teacher and ask her to explain to his uncle why play matters."),ok:true,bg:'school',
+     text:L("The PT teacher shows the family how sport helps learning, health and friendship. Hari plays after homework and enjoys it."),
+     cast:[{who:'coach',mood:'happy'},{who:'hari',mood:'happy',wave:true},{who:'mamu',mood:'surprised'}]},
+    {label:L("Give up everything he loves."),ok:false,bg:'field',
+     text:L("Hari becomes tired and sad, and studying gets harder. Children need rest and play."),
+     cast:[{who:'hari',mood:'sad'}]},
+    {label:L("Skip classes secretly to play."),ok:false,bg:'school',
+     text:L("Missing class creates new problems. Balance is the key."),
+     cast:[{who:'hari',mood:'worried'}]}
+   ]}
+ ],
+ law:{act:L("UN Convention on the Rights of the Child, Article 31 (India ratified in 1992) and RTE norms for school playgrounds"),
+  points:[
+   L("Every child has the right to rest, play and take part in cultural life."),
+   L("RTE norms say schools should have a playground and sports equipment."),
+   L("Play improves health, friendships and learning."),
+   L("Rest is a right too. No child should be made to work or study without breaks.")],
+  remember:L("Play is not a waste. It is part of growing up."),
+  help:[H.teacher,H.head,H.sarpanch]},
+ quiz:[
+  {q:L("Is play a right of children?"),o:[L("Yes"),L("Only on Sundays"),L("No")],a:0},
+  {q:L("What do RTE norms ask schools to have?"),o:[L("A shop"),L("A playground"),L("A cinema")],a:1},
+  {q:L("Does play help learning?"),o:[L("Yes, health and mind"),L("Only for athletes"),L("No")],a:0}
+ ],
+ teach:{
+  obj:[L("Explain that rest and play are rights."),L("Teach children to ask for balance.")],
+  disc:[L("Why do children need free time?"),L("How can families balance study and play?")],
+  act:L("Class creates a daily timetable with study, play and rest.")}
+},
+{
+ id:'voice',icon:'🗣️',color:'#e0a34a',
+ place:L("Bal Sabha"),
+ title:L("Right to Be Heard"),
+ blurb:L("Kavya's village wants a children's opinion on a new road."),
+ chars:{
+  kavya:{name:L("Kavya"),girl:true,shirt:'#e56aa7',hair:'#1c120d',skin:'#e0ac80'},
+  sarpanch:{name:L("Sarpanch"),adult:true,acc:'mustache',shirt:'#b58de0',hair:'#1c120d',skin:'#d79e70'},
+  dadi:{name:L("Dadi"),girl:true,adult:true,acc:'scarf',scarf:'#c95b5b',shirt:'#c95b5b',hair:'#1c120d',skin:'#c98d62'}
+ },
+ steps:[
+  {t:'story',bg:'field',prop:'🗣️',text:L("A new road is planned through the children's playing field. Nobody asked the children."),
+   cast:[{who:'kavya',mood:'worried',say:L("The field is where we play and study under the tree.")},{who:'sarpanch',mood:'happy'}]},
+  {t:'story',bg:'school',prop:'📢',text:L("Kavya's teacher tells her that children can speak at the Bal Sabha and share ideas."),
+   cast:[{who:'dadi',mood:'happy',say:L("Go on, speak politely and clearly.")}]},
+  {t:'choice',bg:'field',prop:'🗣️',text:L("What should Kavya do?"),
+   cast:[{who:'kavya',mood:'worried'},{who:'dadi',mood:'happy'}],
+   options:[
+    {label:L("Stay quiet. Children are not asked anyway."),ok:false,bg:'field',
+     text:L("The field is lost without anyone hearing the children's side."),
+     cast:[{who:'kavya',mood:'sad'}]},
+    {label:L("Prepare her points with friends and present at the Bal Sabha or Gram Sabha politely."),ok:true,bg:'school',
+     text:L("The Sarpanch listens and the road is moved to avoid the field. The village starts holding regular children's meetings."),
+     cast:[{who:'sarpanch',mood:'happy'},{who:'kavya',mood:'happy',wave:true},{who:'dadi',mood:'happy'}]},
+    {label:L("Shout and block the road."),ok:false,bg:'field',
+     text:L("Shouting and blocking creates fear and trouble. Speaking politely works better."),
+     cast:[{who:'kavya',mood:'worried'}]}
+   ]}
+ ],
+ law:{act:L("UN Convention on the Rights of the Child, Article 12 (India ratified in 1992)"),
+  points:[
+   L("Children have the right to express their views on matters that affect them."),
+   L("Adults should listen and take children's views seriously."),
+   L("Many villages and schools hold Bal Sabhas or child parliaments."),
+   L("Respectful speaking helps everyone listen.")],
+  remember:L("My voice matters."),
+  help:[H.teacher,H.sarpanch,H.head]},
+ quiz:[
+  {q:L("Do children have a right to express views?"),o:[L("No"),L("Yes"),L("Only adults")],a:1},
+  {q:L("How should you speak at a meeting?"),o:[L("Politely and clearly"),L("Never"),L("By shouting")],a:0},
+  {q:L("What is a Bal Sabha?"),o:[L("A shop"),L("A meeting for children's voices"),L("A vehicle")],a:1}
+ ],
+ teach:{
+  obj:[L("Explain that children have the right to be heard."),L("Teach respectful speaking and listening.")],
+  disc:[L("What is one issue children can speak about?"),L("How can adults show they are listening?")],
+  act:L("Class holds a mini Bal Sabha on a school topic.")}
+},
+{
+ id:'disability',icon:'🦽',color:'#b86fd1',
+ place:L("Inclusive School"),
+ title:L("Rights of Children with Disabilities"),
+ blurb:L("Aman uses a wheelchair and was refused admission."),
+ chars:{
+  aman:{name:L("Aman"),shirt:'#5a9cf0',hair:'#1c120d',skin:'#d79e70'},
+  maa:{name:L("Maa"),girl:true,adult:true,shirt:'#f0b34a',hair:'#1c120d',skin:'#c98d62'},
+  head:{name:L("Principal Madam"),girl:true,adult:true,acc:'glasses',shirt:'#8a8fa3',hair:'#1c120d',skin:'#d09a6e'},
+  friend:{name:L("Isha"),girl:true,shirt:'#ff8fa3',hair:'#1c120d',skin:'#e8b98a'}
+ },
+ steps:[
+  {t:'story',bg:'school',prop:'🏫',text:L("The school says it cannot admit Aman because he uses a wheelchair."),
+   cast:[{who:'head',mood:'sad',say:L("We do not have a ramp, sorry.")},{who:'aman',mood:'sad'}]},
+  {t:'story',bg:'home',prop:'💭',text:L("Aman's mother is told not to bother and to keep him at home."),
+   cast:[{who:'maa',mood:'worried',say:L("He loves studying. What can we do?")}]},
+  {t:'choice',bg:'school',prop:'🦽',text:L("What should Aman's family do?"),
+   cast:[{who:'aman',mood:'worried'},{who:'maa',mood:'worried'}],
+   options:[
+    {label:L("Keep Aman at home forever."),ok:false,bg:'home',
+     text:L("Aman loses the chance to learn and make friends. Children with disabilities have equal rights to education."),
+     cast:[{who:'aman',mood:'sad'}]},
+    {label:L("Insist Aman must walk like others."),ok:false,bg:'school',
+     text:L("Children are not the problem. Schools must change to include everyone."),
+     cast:[{who:'aman',mood:'worried'}]},
+    {label:L("Ask for admission in writing and contact the education officer, since inclusive education is a right."),ok:true,bg:'school',
+     text:L("The officer reminds the school of the law. A ramp is built, and Aman joins the class. Classmates become his friends."),
+     cast:[{who:'head',mood:'happy'},{who:'aman',mood:'happy',wave:true},{who:'friend',mood:'happy'},{who:'maa',mood:'happy'}]}
+   ]}
+ ],
+ law:{act:L("Rights of Persons with Disabilities Act, 2016 and RTE Act, 2009"),
+  points:[
+   L("Children with benchmark disabilities have the right to free education up to age 18."),
+   L("Schools must be accessible and provide reasonable support."),
+   L("Discrimination on the basis of disability is not allowed."),
+   L("Inclusive classrooms benefit all children.")],
+  remember:L("Every child belongs in school."),
+  help:[H.head,H.deo,H.child]},
+ quiz:[
+  {q:L("Can a school refuse admission because of disability?"),o:[L("Yes"),L("Only sometimes"),L("No")],a:2},
+  {q:L("Who must make schools accessible?"),o:[L("Nobody"),L("The school and authorities"),L("Only the child")],a:1},
+  {q:L("Does inclusive education help everyone?"),o:[L("Only the child"),L("No"),L("Yes")],a:2}
+ ],
+ teach:{
+  obj:[L("Explain that children with disabilities have equal rights."),L("Teach respect and inclusion.")],
+  disc:[L("How can our school be more accessible?"),L("What can classmates do to include everyone?")],
+  act:L("Class maps their school for accessibility and suggests changes.")}
+},
+{
+ id:'discrimination',icon:'🤝',color:'#e07b53',
+ place:L("Village Well"),
+ title:L("Equality and No Discrimination"),
+ blurb:L("A friend is told not to touch the water pot."),
+ chars:{
+  lakshmi:{name:L("Lakshmi"),girl:true,shirt:'#ff8fa3',hair:'#1c120d',skin:'#c98d62'},
+  geeta:{name:L("Geeta"),girl:true,shirt:'#4fb5b0',hair:'#1c120d',skin:'#d09a6e'},
+  elder:{name:L("Village Elder"),adult:true,shirt:'#7fc77a',hair:'#1c120d',skin:'#e8b98a'},
+  teacher:{name:L("Teacher Madam"),girl:true,adult:true,acc:'glasses',shirt:'#6aa5ff',hair:'#1c120d',skin:'#e0ac80'}
+ },
+ steps:[
+  {t:'story',bg:'home',prop:'💧',text:L("Geeta is told by an elder not to touch the common water pot because of her family's caste."),
+   cast:[{who:'elder',mood:'angry',say:L("Do not touch it.")},{who:'geeta',mood:'sad'}]},
+  {t:'story',bg:'school',prop:'😟',text:L("Lakshmi is shocked. At school they learned that everyone is equal."),
+   cast:[{who:'lakshmi',mood:'worried',say:L("That is not fair.")}]},
+  {t:'choice',bg:'home',prop:'💧',text:L("What should Lakshmi do?"),
+   cast:[{who:'lakshmi',mood:'worried'},{who:'geeta',mood:'sad'}],
+   options:[
+    {label:L("Tell the teacher and the Sarpanch. Everyone has equal rights to water and respect."),ok:true,bg:'school',
+     text:L("The teacher and Sarpanch explain the law. The community agrees to treat everyone equally and Geeta fills water without fear."),
+     cast:[{who:'teacher',mood:'happy'},{who:'lakshmi',mood:'happy',wave:true},{who:'geeta',mood:'happy'}]},
+    {label:L("Say it is how things have always been."),ok:false,bg:'home',
+     text:L("The unfairness continues and Geeta feels hurt. Equality is a constitutional promise."),
+     cast:[{who:'geeta',mood:'sad'}]},
+    {label:L("Take revenge on the elder."),ok:false,bg:'home',
+     text:L("Revenge increases hurt. Lawful help works better."),
+     cast:[{who:'lakshmi',mood:'worried'}]}
+   ]}
+ ],
+ law:{act:L("Constitution Articles 15 and 17 and the SC/ST (Prevention of Atrocities) Act, 1989"),
+  points:[
+   L("Untouchability is abolished and its practice in any form is forbidden."),
+   L("The State cannot discriminate on grounds of religion, race, caste, sex or place of birth."),
+   L("Public wells, tanks and places are open to all."),
+   L("Discrimination can be reported to the police, the teacher or Childline.")],
+  remember:L("Everyone is equal and deserves respect."),
+  help:[H.teacher,H.sarpanch,H.police]},
+ quiz:[
+  {q:L("Is untouchability allowed?"),o:[L("Yes"),L("Sometimes"),L("No, it is abolished")],a:2},
+  {q:L("Are public wells open to all?"),o:[L("Yes"),L("No"),L("Only to some")],a:0},
+  {q:L("What should you do if you see discrimination?"),o:[L("Join in"),L("Ignore"),L("Tell a trusted adult")],a:2}
+ ],
+ teach:{
+  obj:[L("Explain that discrimination is forbidden by the Constitution."),L("Teach children to include everyone.")],
+  disc:[L("Why are old customs sometimes unfair?"),L("How can we make our school welcoming to all?")],
+  act:L("Class writes a 'we are all equal' pledge.")}
+},
+{
+ id:'girls',icon:'👧',color:'#f06fae',
+ place:L("Home"),
+ title:L("Equal Rights for Girls"),
+ blurb:L("Pinky is told that studies are only for her brother."),
+ chars:{
+  pinky:{name:L("Pinky"),girl:true,shirt:'#6aa5ff',hair:'#1c120d',skin:'#d09a6e'},
+  bhai:{name:L("Chintu"),shirt:'#d9609a',hair:'#1c120d',skin:'#e8b98a'},
+  dada:{name:L("Dadaji"),adult:true,acc:'mustache',shirt:'#4dbdb5',hair:'#1c120d',skin:'#e0ac80'},
+  miss:{name:L("Teacher Miss"),girl:true,adult:true,acc:'glasses',shirt:'#e56aa7',hair:'#1c120d',skin:'#d79e70'}
+ },
+ steps:[
+  {t:'story',bg:'home',prop:'📚',text:L("Dadaji says money should go only to Chintu's studies because girls will get married anyway."),
+   cast:[{who:'dada',mood:'angry',say:L("A girl needs only kitchen skills.")},{who:'pinky',mood:'sad'}]},
+  {t:'story',bg:'school',prop:'🌟',text:L("Pinky is the best in her class. Teacher Miss believes in her."),
+   cast:[{who:'miss',mood:'happy',say:L("Pinky can become anything she wants.")}]},
+  {t:'choice',bg:'home',prop:'📚',text:L("What should Pinky do?"),
+   cast:[{who:'pinky',mood:'worried'},{who:'dada',mood:'angry'}],
+   options:[
+    {label:L("Leave school quietly."),ok:false,bg:'home',
+     text:L("Pinky loses her dream and the chance to earn her own living."),
+     cast:[{who:'pinky',mood:'sad'}]},
+    {label:L("Ask Teacher Miss to speak with the family about equal rights and scholarships for girls."),ok:true,bg:'school',
+     text:L("Teacher Miss explains the law and shows scholarship forms. Dadaji changes his mind and both children study."),
+     cast:[{who:'miss',mood:'happy'},{who:'pinky',mood:'happy',wave:true},{who:'dada',mood:'surprised'},{who:'bhai',mood:'happy'}]},
+    {label:L("Hide her books and study at night in secret."),ok:false,bg:'home',
+     text:L("Studying is fine, but she should not have to hide. Get adult support."),
+     cast:[{who:'pinky',mood:'worried'}]}
+   ]}
+ ],
+ law:{act:L("Articles 14 and 15 of the Constitution and the Hindu Succession (Amendment) Act, 2005"),
+  points:[
+   L("Girls and boys have equal rights to education and opportunity."),
+   L("The State can make special provisions for girls' education and safety."),
+   L("Daughters have equal rights with sons in a Hindu family's ancestral property."),
+   L("Sex-selective abortion is illegal under the PCPNDT Act, 1994.")],
+  remember:L("A girl's dreams are as big as anyone's."),
+  help:[H.teacher,H.head,H.sarpanch]},
+ quiz:[
+  {q:L("Do girls and boys have equal rights to education?"),o:[L("Yes"),L("Only boys"),L("No")],a:0},
+  {q:L("Who can help convince a family?"),o:[L("Nobody"),L("A teacher"),L("A stranger")],a:1},
+  {q:L("Do daughters have equal rights to ancestral property?"),o:[L("No"),L("Yes, after 2005 too"),L("Only sons")],a:1}
+ ],
+ teach:{
+  obj:[L("Explain that equality is a constitutional promise."),L("Show examples of women leaders in different fields.")],
+  disc:[L("Why should girls and boys have equal chances?"),L("How can we respectfully talk to elders about change?")],
+  act:L("Class writes letters to inspiring women in their lives.")}
+},
+{
+ id:'nutrition',icon:'🥕',color:'#8fbf4a',
+ place:L("Anganwadi"),
+ title:L("Right to Nutrition"),
+ blurb:L("Little Guddu is always tired and thin."),
+ chars:{
+  guddu:{name:L("Guddu"),shirt:'#e56aa7',hair:'#1c120d',skin:'#e8b98a'},
+  mausi:{name:L("Mausi"),girl:true,adult:true,acc:'scarf',scarf:'#b58de0',shirt:'#b58de0',hair:'#1c120d',skin:'#e0ac80'},
+  aww:{name:L("Anganwadi Didi"),girl:true,adult:true,shirt:'#c95b5b',hair:'#1c120d',skin:'#d79e70'},
+  riya:{name:L("Riya"),girl:true,shirt:'#5a9cf0',hair:'#1c120d',skin:'#c98d62'}
+ },
+ steps:[
+  {t:'story',bg:'home',prop:'🥣',text:L("Guddu is four. He is often tired and rarely eats a full meal at home. His family is poor."),
+   cast:[{who:'riya',mood:'worried',say:L("Guddu looks weak, Mausi.")},{who:'mausi',mood:'sad'}]},
+  {t:'story',bg:'home',prop:'🏠',text:L("Riya remembers an Anganwadi centre nearby that gives food and care to young children."),
+   cast:[{who:'riya',mood:'happy',say:L("Didi at the Anganwadi may help.")}]},
+  {t:'choice',bg:'home',prop:'🥕',text:L("What should the family do?"),
+   cast:[{who:'mausi',mood:'worried'},{who:'guddu',mood:'sad'}],
+   options:[
+    {label:L("Wait and hope Guddu gets better."),ok:false,bg:'home',
+     text:L("Weak nutrition in early years can affect growth and learning. Help is available."),
+     cast:[{who:'guddu',mood:'sad'}]},
+    {label:L("Stop him from going out to play."),ok:false,bg:'home',
+     text:L("Play is healthy. Good food and health care are what he needs."),
+     cast:[{who:'guddu',mood:'worried'}]},
+    {label:L("Register Guddu at the Anganwadi and ask about take-home rations and health check-ups."),ok:true,bg:'school',
+     text:L("Anganwadi Didi weighs him, registers him and gives nutritious food and check-ups. Guddu slowly grows stronger and happier."),
+     cast:[{who:'aww',mood:'happy'},{who:'guddu',mood:'happy',wave:true},{who:'mausi',mood:'happy'}]}
+   ]}
+ ],
+ law:{act:L("National Food Security Act, 2013 and the Integrated Child Development Services (ICDS) scheme"),
+  points:[
+   L("Children aged 6 months to 6 years are entitled to free nutritious food at Anganwadi centres."),
+   L("Pregnant and breastfeeding mothers receive support too."),
+   L("Anganwadi centres give health check-ups, immunisation help and early learning."),
+   L("Families can approach the Anganwadi worker or the local health centre.")],
+  remember:L("Good food and care in early years build a strong future."),
+  help:[H.aww,H.asha,H.sarpanch]},
+ quiz:[
+  {q:L("Which centre gives food to young children?"),o:[L("Cinema"),L("Bank"),L("Anganwadi")],a:2},
+  {q:L("What age group is covered for ICDS nutrition?"),o:[L("6 months to 6 years"),L("60 plus"),L("18 to 25")],a:0},
+  {q:L("Does the Anganwadi also give health check-ups?"),o:[L("Only for adults"),L("Yes"),L("No")],a:1}
+ ],
+ teach:{
+  obj:[L("Explain that nutrition for young children is a right."),L("Show children where the Anganwadi is.")],
+  disc:[L("Why is good food important for growing children?"),L("How can neighbours support each other?")],
+  act:L("Class draws a 'healthy plate' and lists local foods.")}
+},
+{
+ id:'begging',icon:'🪙',color:'#c98a2f',
+ place:L("Bus Stand"),
+ title:L("Protection from Forced Begging"),
+ blurb:L("A man makes children beg at the bus stand."),
+ chars:{
+  sonu:{name:L("Sonu"),shirt:'#5a9cf0',hair:'#1c120d',skin:'#e0ac80'},
+  boss:{name:L("Bhaiya"),adult:true,acc:'mustache',shirt:'#f0b34a',hair:'#1c120d',skin:'#d79e70'},
+  didi:{name:L("Outreach Didi"),girl:true,adult:true,acc:'glasses',shirt:'#8a8fa3',hair:'#1c120d',skin:'#c98d62'},
+  mona:{name:L("Mona"),girl:true,shirt:'#ff8fa3',hair:'#1c120d',skin:'#d09a6e'}
+ },
+ steps:[
+  {t:'story',bg:'dhaba',prop:'🪙',text:L("A man gives Sonu and Mona food and a place to sleep, but takes all the money they collect."),
+   cast:[{who:'boss',mood:'angry',say:L("Bring more tomorrow or no food.")},{who:'sonu',mood:'sad'}]},
+  {t:'story',bg:'dhaba',prop:'😢',text:L("The children are tired. They want to go to school."),
+   cast:[{who:'mona',mood:'worried',say:L("I miss reading.")},{who:'sonu',mood:'sad'}]},
+  {t:'choice',bg:'dhaba',prop:'🪙',text:L("What can Sonu and Mona do?"),
+   cast:[{who:'sonu',mood:'worried'},{who:'mona',mood:'sad'}],
+   options:[
+    {label:L("Tell a trusted adult or call Childline 1098 for help."),ok:true,bg:'school',
+     text:L("Childline reaches the children, takes them to safety and sends them to school. The man faces legal action. The children are protected, not punished."),
+     cast:[{who:'didi',mood:'happy'},{who:'sonu',mood:'happy',wave:true},{who:'mona',mood:'happy'}]},
+    {label:L("Keep begging. There is nothing else to do."),ok:false,bg:'dhaba',
+     text:L("The man keeps control over them and school stays out of reach."),
+     cast:[{who:'sonu',mood:'sad'}]},
+    {label:L("Run away alone."),ok:false,bg:'dhaba',
+     text:L("Running alone can be unsafe. Childline can help safely."),
+     cast:[{who:'sonu',mood:'worried'}]}
+   ]}
+ ],
+ law:{act:L("Juvenile Justice (Care and Protection of Children) Act, 2015 (Section 76)"),
+  points:[
+   L("Using or employing a child for begging is a crime."),
+   L("The punishment can be up to 5 years in jail and a fine of up to ₹1 lakh."),
+   L("Children found begging are treated as in need of care and protection, not as criminals."),
+   L("Childline 1098 can help any child quickly.")],
+  remember:L("No child should be made to beg."),
+  help:[H.child,H.police,H.trusted]},
+ quiz:[
+  {q:L("Is making a child beg a crime?"),o:[L("No"),L("Only at night"),L("Yes")],a:2},
+  {q:L("Is the child punished?"),o:[L("No, the child is protected"),L("Yes"),L("Sometimes")],a:0},
+  {q:L("Which number can help?"),o:[L("1000"),L("500"),L("1098")],a:2}
+ ],
+ teach:{
+  obj:[L("Explain that forced begging is illegal."),L("Teach children to ask for help.")],
+  disc:[L("Why do some children end up begging?"),L("How can communities support them?")],
+  act:L("Class lists helpful numbers and offices on a chart.")}
+},
+{
+ id:'juvenile',icon:'🏛️',color:'#6f8fa8',
+ place:L("Child-Friendly Police Station"),
+ title:L("Rights of Children in Trouble"),
+ blurb:L("Arun is picked up by the police after a quarrel."),
+ chars:{
+  arun:{name:L("Arun"),shirt:'#ff8fa3',hair:'#1c120d',skin:'#d79e70'},
+  amma:{name:L("Amma"),girl:true,adult:true,shirt:'#4fb5b0',hair:'#1c120d',skin:'#c98d62'},
+  sub:{name:L("Police Officer"),adult:true,shirt:'#7fc77a',hair:'#1c120d',skin:'#d09a6e'},
+  jjb:{name:L("Board Member"),girl:true,adult:true,acc:'glasses',shirt:'#6aa5ff',hair:'#1c120d',skin:'#e8b98a'}
+ },
+ steps:[
+  {t:'story',bg:'home',prop:'🚓',text:L("Arun, 15, gets into a fight at the market. The police take him in."),
+   cast:[{who:'sub',mood:'angry',say:L("Come with me.")},{who:'arun',mood:'worried'}]},
+  {t:'story',bg:'home',prop:'😰',text:L("Arun is scared and his mother does not know what will happen to him."),
+   cast:[{who:'amma',mood:'sad',say:L("Where is my son?")}]},
+  {t:'choice',bg:'home',prop:'🏛️',text:L("What should happen to Arun?"),
+   cast:[{who:'arun',mood:'worried'},{who:'amma',mood:'sad'}],
+   options:[
+    {label:L("He should be kept in a jail with adults."),ok:false,bg:'home',
+     text:L("That is not allowed for children. Keeping children with adult prisoners can harm them badly."),
+     cast:[{who:'arun',mood:'sad'}]},
+    {label:L("He should be brought before the Juvenile Justice Board and have his family informed."),ok:true,bg:'school',
+     text:L("Arun's parents are called. A child-friendly Board hears him, gives him counselling and a chance to put things right. He returns to school."),
+     cast:[{who:'jjb',mood:'happy'},{who:'arun',mood:'happy',wave:true},{who:'amma',mood:'happy'}]},
+    {label:L("The police should handcuff and beat him."),ok:false,bg:'home',
+     text:L("Never allowed. Children must be treated kindly and with dignity."),
+     cast:[{who:'arun',mood:'worried'}]}
+   ]}
+ ],
+ law:{act:L("Juvenile Justice (Care and Protection of Children) Act, 2015"),
+  points:[
+   L("Anyone under 18 who is accused of a crime is dealt with by the Juvenile Justice Board, not a regular criminal court."),
+   L("A child cannot be kept in a police lock-up or jail with adults."),
+   L("Parents must be informed, and the child has the right to a lawyer."),
+   L("The aim is care, reform and bringing the child back to a good life.")],
+  remember:L("Even when I make a mistake, I deserve fairness and care."),
+  help:[H.police,H.child,H.legal]},
+ quiz:[
+  {q:L("Which body deals with children accused of crimes?"),o:[L("Juvenile Justice Board"),L("A private court"),L("Adult jail")],a:0},
+  {q:L("Can a child be kept with adult prisoners?"),o:[L("Yes"),L("Sometimes"),L("No")],a:2},
+  {q:L("What is the aim of the system?"),o:[L("Fear"),L("Care and reform"),L("Revenge")],a:1}
+ ],
+ teach:{
+  obj:[L("Explain that children in trouble have special protection."),L("Teach respectful conflict resolution.")],
+  disc:[L("Why do children need different treatment from adults?"),L("How can we solve quarrels without fights?")],
+  act:L("Class role-plays calm ways to resolve a quarrel.")}
+},
+{
+ id:'water',icon:'🚰',color:'#3b9fd6',
+ place:L("School Toilet"),
+ title:L("Right to Clean Water and Toilets"),
+ blurb:L("There is no toilet for girls at Sneha's school."),
+ chars:{
+  sneha:{name:L("Sneha"),girl:true,shirt:'#6aa5ff',hair:'#1c120d',skin:'#c98d62'},
+  hm:{name:L("Headmaster"),adult:true,acc:'glasses',shirt:'#d9609a',hair:'#1c120d',skin:'#d09a6e'},
+  maa:{name:L("Maa"),girl:true,adult:true,shirt:'#4dbdb5',hair:'#1c120d',skin:'#e8b98a'},
+  rohit:{name:L("Rohit"),shirt:'#e56aa7',hair:'#1c120d',skin:'#e0ac80'}
+ },
+ steps:[
+  {t:'story',bg:'school',prop:'🚰',text:L("Sneha's school has no working toilet for girls and no safe drinking water. Some girls have stopped coming."),
+   cast:[{who:'sneha',mood:'worried',say:L("Many girls are missing class.")},{who:'hm',mood:'sad'}]},
+  {t:'story',bg:'school',prop:'😟',text:L("Sneha knows this is not fair to girls or to anyone."),
+   cast:[{who:'rohit',mood:'worried',say:L("Even we cannot drink the water here.")}]},
+  {t:'choice',bg:'school',prop:'🚰',text:L("What should Sneha do?"),
+   cast:[{who:'sneha',mood:'worried'},{who:'rohit',mood:'worried'}],
+   options:[
+    {label:L("Stop going to school."),ok:false,bg:'school',
+     text:L("Learning stops and the problem stays. Clean water and toilets are a basic need."),
+     cast:[{who:'sneha',mood:'sad'}]},
+    {label:L("Drink dirty water anyway."),ok:false,bg:'school',
+     text:L("Unsafe water makes children sick. Report it so it can be fixed."),
+     cast:[{who:'rohit',mood:'worried'}]},
+    {label:L("Raise it with the headmaster, the School Management Committee and the education officer."),ok:true,bg:'school',
+     text:L("The school repairs the toilets and installs water filters with local support. All the girls return to class."),
+     cast:[{who:'hm',mood:'happy'},{who:'sneha',mood:'happy',wave:true},{who:'rohit',mood:'happy'}]}
+   ]}
+ ],
+ law:{act:L("RTE Act, 2009 (school infrastructure norms) and Article 21"),
+  points:[
+   L("Schools are meant to have safe drinking water and separate toilets for boys and girls."),
+   L("Clean water and sanitation are part of the right to a healthy life."),
+   L("Parents and the School Management Committee can help monitor facilities."),
+   L("Children can raise problems with the headmaster or education officer.")],
+  remember:L("Clean water and toilets are basic rights, not luxuries."),
+  help:[H.head,H.deo,H.sarpanch]},
+ quiz:[
+  {q:L("What must schools provide?"),o:[L("Safe water and separate toilets"),L("A cinema"),L("A shop")],a:0},
+  {q:L("Who can help fix the problem?"),o:[L("Headmaster and the SMC"),L("Only children"),L("Nobody")],a:0},
+  {q:L("Why does it matter for girls?"),o:[L("Only for teachers"),L("Girls may miss school without toilets"),L("It does not")],a:1}
+ ],
+ teach:{
+  obj:[L("Explain that water and toilets are basic school rights."),L("Show how to raise problems politely.")],
+  disc:[L("How does a missing toilet affect learning?"),L("Who can improve school facilities?")],
+  act:L("Class audits their school's water and toilets and writes a note.")}
+},
+{
+ id:'road',icon:'🚲',color:'#ef9b3b',
+ place:L("Road Crossing"),
+ title:L("Road Safety for Children"),
+ blurb:L("Karan wants to ride his father's bike alone."),
+ chars:{
+  karan:{name:L("Karan"),shirt:'#e56aa7',hair:'#1c120d',skin:'#d09a6e'},
+  papa:{name:L("Papa"),adult:true,shirt:'#b58de0',hair:'#1c120d',skin:'#e8b98a'},
+  police:{name:L("Traffic Police"),adult:true,acc:'mustache',shirt:'#c95b5b',hair:'#1c120d',skin:'#e0ac80'},
+  mitu:{name:L("Mitu"),girl:true,shirt:'#5a9cf0',hair:'#1c120d',skin:'#d79e70'}
+ },
+ steps:[
+  {t:'story',bg:'home',prop:'🏍️',text:L("Karan is 15. His friends ride bikes without helmets. He wants to try too."),
+   cast:[{who:'karan',mood:'happy',say:L("Come on, just a short ride!")},{who:'mitu',mood:'worried'}]},
+  {t:'story',bg:'home',prop:'🚦',text:L("Mitu knows he has no licence and no helmet."),
+   cast:[{who:'mitu',mood:'worried',say:L("It is not safe, Karan.")}]},
+  {t:'choice',bg:'home',prop:'🚲',text:L("What should Karan do?"),
+   cast:[{who:'karan',mood:'worried'},{who:'mitu',mood:'worried'}],
+   options:[
+    {label:L("Wait until he is old enough, get a licence, and always wear a helmet or seat belt as a passenger."),ok:true,bg:'home',
+     text:L("Karan rides as a passenger with a helmet, learns the rules and avoids trouble."),
+     cast:[{who:'police',mood:'happy'},{who:'karan',mood:'happy',wave:true},{who:'mitu',mood:'happy'}]},
+    {label:L("Take the bike without telling anyone."),ok:false,bg:'home',
+     text:L("An accident can injure him badly. It is also illegal for a child to drive, and Papa could be punished."),
+     cast:[{who:'karan',mood:'sad'}]},
+    {label:L("Cross the road while looking at the phone."),ok:false,bg:'home',
+     text:L("Distracted crossing is dangerous. Look, listen and use the zebra crossing."),
+     cast:[{who:'mitu',mood:'worried'}]}
+   ]}
+ ],
+ law:{act:L("Motor Vehicles Act, 1988 (as amended in 2019), Section 199A"),
+  points:[
+   L("A person under 18 cannot drive a motor vehicle on public roads."),
+   L("If a child drives, the guardian or vehicle owner can be punished with a fine of ₹25,000 and up to 3 years in jail."),
+   L("The vehicle registration can also be cancelled for 12 months."),
+   L("Children on two-wheelers must wear helmets, and seat belts are required in cars.")],
+  remember:L("Safe roads start with me."),
+  help:[H.police,H.teacher,H.trusted]},
+ quiz:[
+  {q:L("Can a 15-year-old drive on public roads?"),o:[L("No"),L("Only on Sundays"),L("Yes")],a:0},
+  {q:L("Who may be punished if a child drives?"),o:[L("The guardian or owner"),L("Nobody"),L("Only the child")],a:0},
+  {q:L("What should two-wheeler riders wear?"),o:[L("Nothing"),L("Helmet"),L("Scarf")],a:1}
+ ],
+ teach:{
+  obj:[L("Explain basic road safety laws."),L("Teach crossing and passenger safety.")],
+  disc:[L("Why do licences have an age limit?"),L("What can we do to cross roads safely?")],
+  act:L("Class designs a 'safe walk to school' route map.")}
+},
+{
+ id:'tobacco',icon:'🚭',color:'#a0522d',
+ place:L("Corner Shop"),
+ title:L("Protection from Tobacco and Intoxicants"),
+ blurb:L("Older boys offer Dev a cigarette outside school."),
+ chars:{
+  dev:{name:L("Dev"),shirt:'#5a9cf0',hair:'#1c120d',skin:'#e8b98a'},
+  bro:{name:L("Older Boy"),shirt:'#f0b34a',hair:'#1c120d',skin:'#e0ac80'},
+  shop:{name:L("Shopkeeper"),adult:true,acc:'mustache',shirt:'#8a8fa3',hair:'#1c120d',skin:'#d79e70'},
+  miss:{name:L("Teacher Miss"),girl:true,adult:true,acc:'glasses',shirt:'#ff8fa3',hair:'#1c120d',skin:'#c98d62'}
+ },
+ steps:[
+  {t:'story',bg:'school',prop:'🚬',text:L("Outside school, older boys tell Dev that smoking and chewing tobacco makes him look cool."),
+   cast:[{who:'bro',mood:'happy',say:L("Try it, nobody will know.")},{who:'dev',mood:'worried'}]},
+  {t:'story',bg:'school',prop:'🤔',text:L("Dev feels pressured and unsure."),
+   cast:[{who:'dev',mood:'worried',say:L("I do not want to, but they will laugh.")}]},
+  {t:'choice',bg:'school',prop:'🚭',text:L("What should Dev do?"),
+   cast:[{who:'dev',mood:'worried'},{who:'bro',mood:'happy'}],
+   options:[
+    {label:L("Try it once to fit in."),ok:false,bg:'school',
+     text:L("Tobacco can become a habit quickly and harms health. Real friends do not pressure you."),
+     cast:[{who:'dev',mood:'sad'}]},
+    {label:L("Say no firmly, walk away and tell Teacher Miss about shops selling to children."),ok:true,bg:'school',
+     text:L("Teacher Miss informs the authorities. The shop is warned and fined. Dev feels proud for standing up."),
+     cast:[{who:'miss',mood:'happy'},{who:'dev',mood:'happy',wave:true}]},
+    {label:L("Take it and hide it in his bag."),ok:false,bg:'school',
+     text:L("Hiding it does not help. Talk to a trusted adult."),
+     cast:[{who:'dev',mood:'worried'}]}
+   ]}
+ ],
+ law:{act:L("COTPA, 2003 and the Juvenile Justice Act, 2015 (Section 77)"),
+  points:[
+   L("Selling tobacco products to anyone under 18 is banned."),
+   L("Selling tobacco within 100 yards of a school is prohibited."),
+   L("Giving a child alcohol or drugs is a crime with up to 7 years in jail and a fine up to ₹1 lakh."),
+   L("Saying no is a strength. A trusted adult can help.")],
+  remember:L("I can say no, and that makes me strong."),
+  help:[H.teacher,H.police,H.child]},
+ quiz:[
+  {q:L("Can shops sell tobacco to under-18s?"),o:[L("No, it is banned"),L("Yes"),L("Only sometimes")],a:0},
+  {q:L("What is a good response to pressure?"),o:[L("Give in"),L("Say no and walk away"),L("Hide it")],a:1},
+  {q:L("Who can help you?"),o:[L("Nobody"),L("A trusted adult"),L("The seller")],a:1}
+ ],
+ teach:{
+  obj:[L("Explain tobacco laws and the harm of intoxicants."),L("Practise refusal skills.")],
+  disc:[L("Why do people pressure others?"),L("How can we say no kindly but firmly?")],
+  act:L("Class role-plays three ways to say no.")}
+},
+{
+ id:'rti',icon:'🔍',color:'#4f9d8a',
+ place:L("Panchayat Notice Board"),
+ title:L("Right to Know (RTI)"),
+ blurb:L("Where did the school grant money go?"),
+ chars:{
+  tara:{name:L("Tara"),girl:true,shirt:'#ff8fa3',hair:'#1c120d',skin:'#e0ac80'},
+  clerk:{name:L("Office Clerk"),adult:true,shirt:'#4fb5b0',hair:'#1c120d',skin:'#d79e70'},
+  bhaiya:{name:L("Bhaiya"),adult:true,acc:'glasses',shirt:'#7fc77a',hair:'#1c120d',skin:'#c98d62'},
+  hm:{name:L("Headmistress"),girl:true,adult:true,shirt:'#6aa5ff',hair:'#1c120d',skin:'#d09a6e'}
+ },
+ steps:[
+  {t:'story',bg:'school',prop:'🔍',text:L("The school has no benches, though a government grant was announced for new furniture."),
+   cast:[{who:'tara',mood:'worried',say:L("Where did the money go?")},{who:'hm',mood:'sad'}]},
+  {t:'story',bg:'school',prop:'🧾',text:L("Nobody will give a clear answer."),
+   cast:[{who:'clerk',mood:'sad',say:L("Come back next week.")}]},
+  {t:'choice',bg:'school',prop:'🔍',text:L("What can Tara do?"),
+   cast:[{who:'tara',mood:'worried'},{who:'bhaiya',mood:'happy'}],
+   options:[
+    {label:L("Complain but do nothing official."),ok:false,bg:'school',
+     text:L("Nothing changes. Complaints without evidence are easily ignored."),
+     cast:[{who:'tara',mood:'sad'}]},
+    {label:L("Accuse the Headmistress without proof."),ok:false,bg:'school',
+     text:L("Without proof, accusations can be unfair. Ask for facts first."),
+     cast:[{who:'tara',mood:'worried'}]},
+    {label:L("Help the school committee file an RTI application and ask for the grant details."),ok:true,bg:'school',
+     text:L("The information comes through. The grant is used, and benches arrive. Records are shared openly."),
+     cast:[{who:'hm',mood:'happy'},{who:'tara',mood:'happy',wave:true},{who:'bhaiya',mood:'happy'}]}
+   ]}
+ ],
+ law:{act:L("Right to Information Act, 2005"),
+  points:[
+   L("Every citizen, of any age, has the right to ask government offices for information."),
+   L("Applications are made in writing or online with a small fee of ₹10 (free for people below the poverty line)."),
+   L("The office must reply within 30 days in most cases."),
+   L("RTI helps keep public work open and honest.")],
+  remember:L("Asking questions is how fairness grows."),
+  help:[H.sarpanch,H.head,H.legal]},
+ quiz:[
+  {q:L("Who can file an RTI?"),o:[L("Only officials"),L("Any citizen"),L("Only lawyers")],a:1},
+  {q:L("How many days does the office usually have to reply?"),o:[L("300"),L("30"),L("3")],a:1},
+  {q:L("What is RTI for?"),o:[L("Selling things"),L("Getting public information"),L("Making films")],a:1}
+ ],
+ teach:{
+  obj:[L("Explain what RTI is."),L("Teach children to ask questions respectfully.")],
+  disc:[L("Why should public money be used openly?"),L("What would you ask your school or village office?")],
+  act:L("Class drafts a sample RTI question for a school improvement.")}
+},
+{
+ id:'cwc',icon:'🏡',color:'#d08aa7',
+ place:L("Children's Home"),
+ title:L("Care for Children Without Family"),
+ blurb:L("Babu finds himself alone after a disaster."),
+ chars:{
+  babu:{name:L("Babu"),shirt:'#6aa5ff',hair:'#1c120d',skin:'#d79e70'},
+  cwcm:{name:L("CWC Member"),girl:true,adult:true,acc:'glasses',shirt:'#d9609a',hair:'#1c120d',skin:'#c98d62'},
+  neighbor:{name:L("Neighbour"),adult:true,shirt:'#4dbdb5',hair:'#1c120d',skin:'#d09a6e'},
+  anita:{name:L("Anita"),girl:true,shirt:'#e56aa7',hair:'#1c120d',skin:'#e8b98a'}
+ },
+ steps:[
+  {t:'story',bg:'home',prop:'🌧️',text:L("After a flood, Babu's family house is gone. His parents are missing. He is alone and afraid."),
+   cast:[{who:'babu',mood:'sad',say:L("I have nowhere to go.")},{who:'neighbor',mood:'worried'}]},
+  {t:'story',bg:'school',prop:'🏘️',text:L("A neighbour finds him. He is not sure how to help."),
+   cast:[{who:'neighbor',mood:'worried',say:L("We must tell someone who can keep him safe.")}]},
+  {t:'choice',bg:'home',prop:'🏡',text:L("What should the neighbour do?"),
+   cast:[{who:'babu',mood:'sad'},{who:'neighbor',mood:'worried'}],
+   options:[
+    {label:L("Call Childline 1098 or the police so the Child Welfare Committee can arrange safe care."),ok:true,bg:'school',
+     text:L("Childline reaches Babu. The Child Welfare Committee finds safe shelter and searches for his family. He gets food, school and kindness."),
+     cast:[{who:'cwcm',mood:'happy'},{who:'babu',mood:'happy',wave:true},{who:'neighbor',mood:'happy'}]},
+    {label:L("Send Babu on his way."),ok:false,bg:'home',
+     text:L("A child alone can be exposed to danger. Someone must make sure he is safe."),
+     cast:[{who:'babu',mood:'sad'}]},
+    {label:L("Keep him hidden at home."),ok:false,bg:'home',
+     text:L("Hiding a child can make things unsafe for him. Official help can protect him and find his family."),
+     cast:[{who:'neighbor',mood:'worried'}]}
+   ]}
+ ],
+ law:{act:L("Juvenile Justice (Care and Protection of Children) Act, 2015"),
+  points:[
+   L("Every Child Welfare Committee (CWC) decides on care and protection of children in need."),
+   L("Anyone who finds a lost or abandoned child should contact Childline 1098 or the police."),
+   L("Children can be placed in foster care, sponsorship or adoption through lawful processes."),
+   L("Every child in care has the right to safety, food, health and education.")],
+  remember:L("No child is ever alone. Help is a call away."),
+  help:[H.child,H.police,H.trusted]},
+ quiz:[
+  {q:L("Whom should you call if you find a lost child?"),o:[L("A friend only"),L("Nobody"),L("Childline 1098")],a:2},
+  {q:L("Who decides on care for children in need?"),o:[L("Child Welfare Committee"),L("Shopkeeper"),L("Neighbour")],a:0},
+  {q:L("Do children in care still have a right to school?"),o:[L("Yes"),L("No"),L("Sometimes")],a:0}
+ ],
+ teach:{
+  obj:[L("Explain how to help a lost or abandoned child."),L("Teach the role of the Child Welfare Committee.")],
+  disc:[L("Why should we not just keep a lost child with us?"),L("How can communities support children in need?")],
+  act:L("Class creates a 'what to do if I find a lost child' chart.")}
+},
+{
+ id:'scholarship',icon:'🎓',color:'#c4a35a',
+ place:L("School Office"),
+ title:L("Right to Scholarships and Fee Support"),
+ blurb:L("Neel is top of class but cannot afford higher classes."),
+ chars:{
+  neel:{name:L("Neel"),shirt:'#e56aa7',hair:'#1c120d',skin:'#c98d62'},
+  baba:{name:L("Baba"),adult:true,shirt:'#b58de0',hair:'#1c120d',skin:'#d09a6e'},
+  sir:{name:L("Career Sir"),adult:true,acc:'glasses',shirt:'#c95b5b',hair:'#1c120d',skin:'#e8b98a'},
+  mini:{name:L("Mini"),girl:true,shirt:'#5a9cf0',hair:'#1c120d',skin:'#e0ac80'}
+ },
+ steps:[
+  {t:'story',bg:'home',prop:'💰',text:L("Neel scored very well but his father says there is no money for class 11."),
+   cast:[{who:'baba',mood:'sad',say:L("We cannot afford the fees.")},{who:'neel',mood:'sad'}]},
+  {t:'story',bg:'school',prop:'📢',text:L("The class teacher hears and says there are scholarships for students like Neel."),
+   cast:[{who:'sir',mood:'happy',say:L("Many scholarships are open for good students from low-income families.")}]},
+  {t:'choice',bg:'home',prop:'🎓',text:L("What should Neel do?"),
+   cast:[{who:'neel',mood:'worried'},{who:'sir',mood:'happy'}],
+   options:[
+    {label:L("Quit studies and work."),ok:false,bg:'home',
+     text:L("Neel loses a bright future. Support is available for students who need it."),
+     cast:[{who:'neel',mood:'sad'}]},
+    {label:L("Ask the teacher about scholarship schemes and apply on the National Scholarship Portal."),ok:true,bg:'school',
+     text:L("With help from Career Sir, Neel applies on the National Scholarship Portal. His fees are covered and he continues school."),
+     cast:[{who:'sir',mood:'happy'},{who:'neel',mood:'happy',wave:true},{who:'baba',mood:'happy'}]},
+    {label:L("Pay a stranger to get him a scholarship."),ok:false,bg:'home',
+     text:L("Never pay agents. Scholarships are free to apply for through official portals."),
+     cast:[{who:'neel',mood:'worried'}]}
+   ]}
+ ],
+ law:{act:L("Right to Education (Article 21A) and Central and State scholarship schemes (scholarships.gov.in)"),
+  points:[
+   L("Many scholarships exist for children from SC, ST, OBC, minority and low-income families, and for girls and children with disabilities."),
+   L("Applications are free on the National Scholarship Portal (scholarships.gov.in) and state portals."),
+   L("Keep documents like marks, income and bank details ready."),
+   L("Never pay agents to apply for you.")],
+  remember:L("Money should not decide a child's future."),
+  help:[H.head,H.teacher,H.deo]},
+ quiz:[
+  {q:L("Where can students apply for scholarships?"),o:[L("Anywhere for a fee"),L("Nowhere"),L("Official portals")],a:2},
+  {q:L("Should you pay agents?"),o:[L("Always"),L("No"),L("Yes")],a:1},
+  {q:L("Who can help you apply?"),o:[L("Strangers"),L("Nobody"),L("Teacher or school office")],a:2}
+ ],
+ teach:{
+  obj:[L("Explain that scholarships support students in need."),L("Show where to find official information.")],
+  disc:[L("Why can scholarships change lives?"),L("How can we protect students from fake agents?")],
+  act:L("Class lists documents needed for a scholarship application.")}
+},
+{
+ id:'mind',icon:'💚',color:'#5fbf9d',
+ place:L("Wellness Corner"),
+ title:L("Right to Mental Wellbeing"),
+ blurb:L("Riya feels crushed by exam stress."),
+ chars:{
+  riya:{name:L("Riya"),girl:true,shirt:'#5a9cf0',hair:'#1c120d',skin:'#d09a6e'},
+  amma:{name:L("Amma"),girl:true,adult:true,shirt:'#f0b34a',hair:'#1c120d',skin:'#e8b98a'},
+  counsel:{name:L("Counsellor"),girl:true,adult:true,acc:'glasses',shirt:'#8a8fa3',hair:'#1c120d',skin:'#e0ac80'},
+  sam:{name:L("Sam"),shirt:'#ff8fa3',hair:'#1c120d',skin:'#d79e70'}
+ },
+ steps:[
+  {t:'story',bg:'home',prop:'📚',text:L("Riya cannot sleep before her board exams. She worries she will fail everyone."),
+   cast:[{who:'riya',mood:'worried',say:L("I feel so much pressure.")},{who:'amma',mood:'worried'}]},
+  {t:'story',bg:'home',prop:'😔',text:L("She has stopped talking to friends and does not feel like eating."),
+   cast:[{who:'sam',mood:'worried',say:L("Riya, are you okay?")}]},
+  {t:'choice',bg:'home',prop:'💚',text:L("What should Riya do?"),
+   cast:[{who:'riya',mood:'sad'},{who:'sam',mood:'worried'}],
+   options:[
+    {label:L("Hide it and keep suffering silently."),ok:false,bg:'home',
+     text:L("Stress grows when we keep it hidden. Talking to someone helps."),
+     cast:[{who:'riya',mood:'sad'}]},
+    {label:L("Skip the exam completely."),ok:false,bg:'home',
+     text:L("Missing it will add worry. Support can help her face it."),
+     cast:[{who:'riya',mood:'worried'}]},
+    {label:L("Tell Amma or a teacher, and call Tele-MANAS 14416 if she wants to talk to someone."),ok:true,bg:'school',
+     text:L("A counsellor listens and teaches Riya calming techniques and a study plan. Riya feels lighter and sleeps better."),
+     cast:[{who:'counsel',mood:'happy'},{who:'riya',mood:'happy',wave:true},{who:'amma',mood:'happy'}]}
+   ]}
+ ],
+ law:{act:L("Mental Healthcare Act, 2017"),
+  points:[
+   L("Every person has the right to access mental healthcare services."),
+   L("Talking about stress, sadness or worry is brave and normal."),
+   L("Tele-MANAS 14416 is a free, confidential government helpline available in many languages."),
+   L("Rest, friends and a balanced routine help.")],
+  remember:L("It is okay to ask for help. My mind matters too."),
+  help:[H.mind,H.teacher,H.trusted]},
+ quiz:[
+  {q:L("Is it okay to talk about stress?"),o:[L("Never"),L("Yes"),L("No")],a:1},
+  {q:L("Which is a free helpline for emotional support?"),o:[L("A shop"),L("Nobody"),L("Tele-MANAS 14416")],a:2},
+  {q:L("What helps with stress?"),o:[L("Talking and a routine"),L("Skipping meals"),L("Hiding it")],a:0}
+ ],
+ teach:{
+  obj:[L("Explain that mental health is part of health."),L("Teach children to reach out for support.")],
+  disc:[L("What are healthy ways to handle exam stress?"),L("Who can we talk to when we feel worried?")],
+  act:L("Class makes a 'calm corner' card with breathing and kindness tips.")}
+},
+{
+ id:'foodsafe',icon:'🍟',color:'#e8b13c',
+ place:L("School Canteen"),
+ title:L("Right to Safe and Healthy Food"),
+ blurb:L("Junk food stalls surround the school gate."),
+ chars:{
+  veer:{name:L("Veer"),shirt:'#ff8fa3',hair:'#1c120d',skin:'#e8b98a'},
+  anu:{name:L("Anu"),girl:true,shirt:'#4fb5b0',hair:'#1c120d',skin:'#e0ac80'},
+  vendor:{name:L("Stall Vendor"),adult:true,acc:'mustache',shirt:'#7fc77a',hair:'#1c120d',skin:'#d79e70'},
+  sir:{name:L("Health Teacher"),adult:true,acc:'glasses',shirt:'#6aa5ff',hair:'#1c120d',skin:'#c98d62'}
+ },
+ steps:[
+  {t:'story',bg:'school',prop:'🍟',text:L("Right outside the gate, stalls sell chips, sweets and fizzy drinks. Veer feels tired and gets stomach aches."),
+   cast:[{who:'anu',mood:'worried',say:L("Everyone is sick so often.")},{who:'veer',mood:'sad'}]},
+  {t:'story',bg:'school',prop:'🍎',text:L("The health teacher explains that too much junk food harms children."),
+   cast:[{who:'sir',mood:'happy',say:L("Healthy food helps you grow and learn.")}]},
+  {t:'choice',bg:'school',prop:'🍎',text:L("What can the class do?"),
+   cast:[{who:'veer',mood:'worried'},{who:'anu',mood:'worried'}],
+   options:[
+    {label:L("Ask the teacher to raise it with the school and food safety officials, and bring healthy snacks."),ok:true,bg:'school',
+     text:L("The school starts a healthy canteen and officials check stalls near the gate. Children eat better and feel stronger."),
+     cast:[{who:'sir',mood:'happy'},{who:'veer',mood:'happy',wave:true},{who:'anu',mood:'happy'}]},
+    {label:L("Eat junk food every day."),ok:false,bg:'school',
+     text:L("Health suffers and energy drops. Healthy habits protect children."),
+     cast:[{who:'veer',mood:'sad'}]},
+    {label:L("Stop eating completely."),ok:false,bg:'school',
+     text:L("Skipping meals harms health. Choose healthy foods instead."),
+     cast:[{who:'veer',mood:'worried'}]}
+   ]}
+ ],
+ law:{act:L("Food Safety and Standards (Safe Food and Healthy Diets for Children in Schools) Regulations, 2020"),
+  points:[
+   L("Schools should serve safe, healthy food and avoid promoting foods high in fat, sugar and salt."),
+   L("Such foods should not be sold or advertised within 50 metres of the school gate."),
+   L("Food must be hygienic and safe."),
+   L("Children can speak to teachers or officials if food is unsafe.")],
+  remember:L("Healthy food is a part of a healthy childhood."),
+  help:[H.teacher,H.head,H.deo]},
+ quiz:[
+  {q:L("Which kind of food should schools promote?"),o:[L("Safe and healthy"),L("High-sugar"),L("Fried only")],a:0},
+  {q:L("Within what distance should unhealthy foods be restricted?"),o:[L("5 km"),L("50 metres"),L("None")],a:1},
+  {q:L("Who can help if food is unsafe?"),o:[L("Nobody"),L("Friends only"),L("Teacher or officials")],a:2}
+ ],
+ teach:{
+  obj:[L("Explain that safe and healthy food is a right."),L("Teach children to read basic food labels.")],
+  disc:[L("What makes a snack healthy?"),L("How can a canteen improve?")],
+  act:L("Class designs a healthy canteen menu.")}
+},
+{
+ id:'admission',icon:'🎒',color:'#7fb0e8',
+ place:L("Admission Desk"),
+ title:L("Right to Re-enter School"),
+ blurb:L("A migrant family's child cannot join mid-year."),
+ chars:{
+  chotu:{name:L("Chotu"),shirt:'#6aa5ff',hair:'#1c120d',skin:'#e0ac80'},
+  ma:{name:L("Maa"),girl:true,adult:true,acc:'scarf',scarf:'#d9609a',shirt:'#d9609a',hair:'#1c120d',skin:'#d79e70'},
+  clerk:{name:L("School Clerk"),adult:true,shirt:'#4dbdb5',hair:'#1c120d',skin:'#c98d62'},
+  miss:{name:L("Teacher Miss"),girl:true,adult:true,acc:'glasses',shirt:'#e56aa7',hair:'#1c120d',skin:'#d09a6e'}
+ },
+ steps:[
+  {t:'story',bg:'school',prop:'🎒',text:L("Chotu's family moves to a new town for work. The school says admissions are closed and he has no transfer papers."),
+   cast:[{who:'clerk',mood:'angry',say:L("Come next year.")},{who:'chotu',mood:'sad'}]},
+  {t:'story',bg:'home',prop:'😟',text:L("Chotu has been out of school for a year and is afraid he is too far behind."),
+   cast:[{who:'ma',mood:'worried',say:L("Will he ever study again?")}]},
+  {t:'choice',bg:'school',prop:'🎒',text:L("What should the family do?"),
+   cast:[{who:'chotu',mood:'worried'},{who:'ma',mood:'worried'}],
+   options:[
+    {label:L("Give up on school."),ok:false,bg:'home',
+     text:L("Chotu loses even more learning time. The law helps children return to school."),
+     cast:[{who:'chotu',mood:'sad'}]},
+    {label:L("Meet the headmaster, quote the right to admission, and contact the education officer if needed."),ok:true,bg:'school',
+     text:L("The school admits Chotu to a class suited to his age and arranges special catch-up classes. He feels welcomed."),
+     cast:[{who:'miss',mood:'happy'},{who:'chotu',mood:'happy',wave:true},{who:'ma',mood:'happy'}]},
+    {label:L("Hide his age and pretend he was always in school."),ok:false,bg:'school',
+     text:L("Hiding the truth is not needed. The law supports honest admission."),
+     cast:[{who:'ma',mood:'worried'}]}
+   ]}
+ ],
+ law:{act:L("Right to Education Act, 2009 (Sections 4 and 5)"),
+  points:[
+   L("An out-of-school child must be admitted to a class suited to his age."),
+   L("Such a child gets special training to catch up with others."),
+   L("A child cannot be denied admission for missing transfer papers, and schools must issue them quickly when asked."),
+   L("If a school refuses, the family can approach the District Education Officer.")],
+  remember:L("It is never too late to learn."),
+  help:[H.head,H.deo,H.child]},
+ quiz:[
+  {q:L("Can a school refuse admission for missing transfer papers?"),o:[L("Only mid-year"),L("Yes"),L("No")],a:2},
+  {q:L("What support can a returning child get?"),o:[L("A fine"),L("Nothing"),L("Special training")],a:2},
+  {q:L("Who can help if refused?"),o:[L("District Education Officer"),L("Nobody"),L("A shopkeeper")],a:0}
+ ],
+ teach:{
+  obj:[L("Explain that children can re-enter school at any age through special training."),L("Teach families where to seek help.")],
+  disc:[L("Why is it important to help children return to school?"),L("How can classmates welcome a new student?")],
+  act:L("Class writes a welcome card for a new student.")}
 }
 ];
 var SAFE=[
@@ -729,6 +1984,8 @@ function house(id,s,h,rh,c,done){
    '<g transform="translate(0,'+by+')"><circle class="ring" r="17" fill="none" stroke="#ff8470" stroke-width="3"/><g class="bk"><circle r="17" fill="url(#coralg)" stroke="#fff" stroke-width="3.5"/><path d="M-4.5 -8 L9 0 L-4.5 8Z" fill="#fff"/></g></g>';
   return o+badge;
 }
+function townNav(){var np=Math.ceil(RIGHTS.length/4),d='';for(var q=0;q<np;q++)d+='<button class="tdot'+(q===townPage?' on':'')+'" data-town="'+q+'" aria-label="'+(q+1)+'/'+np+'"></button>';
+  return '<div class="tnav" id="tnav"><button class="btn sm alt" data-town="prev" aria-label="'+esc(t('back'))+'">◀</button><div class="tdots">'+d+'</div><span class="tlbl">'+esc(t('area'))+' '+(townPage+1)+'/'+np+'</span><button class="btn sm alt" data-town="next" aria-label="'+esc(t('next'))+'">▶</button></div>'}
 function island(r,i,cx,cy,s,h,rh,pal,done,idx){
   var S=s+46,t=18,F=[cx,cy+S/2],R=[cx+S*K,cy],B=[cx,cy-S/2],Lf=[cx-S*K,cy];
   var sh=function(p){return [p[0],p[1]+t]};
@@ -749,11 +2006,16 @@ function island(r,i,cx,cy,s,h,rh,pal,done,idx){
 }
 function cloud(x,y,s,op,sp,dl,d){return '<g class="px" style="--d:'+d+'"><g class="cl" style="--sp:'+sp+'s;--dl:-'+dl+'s"><g transform="translate('+x+','+y+') scale('+s+')" fill="#fff" opacity="'+op+'" filter="url(#b6)"><ellipse cx="0" cy="0" rx="60" ry="22"/><ellipse cx="-34" cy="8" rx="36" ry="18"/><ellipse cx="38" cy="8" rx="42" ry="18"/><ellipse cx="8" cy="-16" rx="34" ry="20"/></g></g></g>'}
 function townSVG(){
-  var PAL=[{l:'#f1998a',r:'#ffb9aa',rb:'#6f9fd6',rl:'#86b4e6',rr:'#a6cdf5'},{l:'#f2c24f',r:'#ffd980',rb:'#c95f4c',rl:'#df7a64',rr:'#f59a84'},{l:'#86c0ec',r:'#a6d6f7',rb:'#ee8574',rl:'#ff9d8c',rr:'#ffb7a8'},{l:'#f4b0c0',r:'#ffcdd8',rb:'#d99a30',rl:'#efb84a',rr:'#ffd674'}];
+  var np=Math.ceil(RIGHTS.length/4);
+  if(townPage===null){townPage=0;for(var q=0;q<np;q++){if(RIGHTS.slice(q*4,q*4+4).some(function(r){return !progress.done[r.id]})){townPage=q;break}}}
+  if(townPage>=np)townPage=np-1;
+  var BASE=townPage*4,TOWN=RIGHTS.slice(BASE,BASE+4);
+  var SL=TOWN.length>=4?[0,1,2,3]:(TOWN.length===3?[0,1,3]:(TOWN.length===2?[1,2]:[1]));
+  var PAL=[{l:'#f1998a',r:'#ffb9aa',rb:'#6f9fd6',rl:'#86b4e6',rr:'#a6cdf5'},{l:'#f2c24f',r:'#ffd980',rb:'#c95f4c',rl:'#df7a64',rr:'#f59a84'},{l:'#86c0ec',r:'#a6d6f7',rb:'#ee8574',rl:'#ff9d8c',rr:'#ffb7a8'},{l:'#f4b0c0',r:'#ffcdd8',rb:'#d99a30',rl:'#efb84a',rr:'#ffd674'},{l:'#9ad9b8',r:'#b9ebd0',rb:'#a07ad1',rl:'#b896e6',rr:'#d0b6f5'},{l:'#f6b98a',r:'#ffd2ad',rb:'#4f9d9a',rl:'#6bb8b3',rr:'#8fd0cb'},{l:'#c3a5e6',r:'#dcc7f5',rb:'#e0a13a',rl:'#f0b955',rr:'#ffd17a'},{l:'#9bc7f0',r:'#bcdcf8',rb:'#7fb86a',rl:'#97cf84',rr:'#b3e29f'}];
   var SPEC=[[210,410,100,118,56],[490,330,92,96,42],[770,412,98,108,64],[1040,332,100,116,36]];
-  var order=RIGHTS.map(function(r,i){return i}).sort(function(a,b){return SPEC[a%4][1]-SPEC[b%4][1]});
-  var isl=order.map(function(i){var sp=SPEC[i%4];return island(RIGHTS[i],i,sp[0],sp[1],sp[2],sp[3],sp[4],PAL[i%4],!!progress.done[RIGHTS[i].id],i)}).join('');
-  var shadows=RIGHTS.map(function(r,i){var sp=SPEC[i%4];return '<ellipse cx="'+sp[0]+'" cy="'+(sp[1]+sp[2]/2+175)+'" rx="'+(sp[2]*.85)+'" ry="16" fill="#8a5a78" opacity=".16" filter="url(#b8)"/>'}).join('');
+  var order=TOWN.map(function(r,i){return i}).sort(function(a,b){return SPEC[SL[a]][1]-SPEC[SL[b]][1]});
+  var isl=order.map(function(i){var sp=SPEC[SL[i]];return island(TOWN[i],i,sp[0],sp[1],sp[2],sp[3],sp[4],PAL[(BASE+i)%8],!!progress.done[TOWN[i].id],BASE+i)}).join('');
+  var shadows=TOWN.map(function(r,i){var sp=SPEC[SL[i]];return '<ellipse cx="'+sp[0]+'" cy="'+(sp[1]+sp[2]/2+175)+'" rx="'+(sp[2]*.85)+'" ry="16" fill="#8a5a78" opacity=".16" filter="url(#b8)"/>'}).join('');
   var leaves='';var lc=['#ff9d6c','#8ad49a','#ffb8ae','#ffd25e','#a8d870'];
   for(var i=0;i<12;i++){leaves+='<g transform="translate('+(40+i*96)+',0)"><g class="leaf" style="--du:'+(13+(i*7)%9)+'s;--dl:-'+((i*3)%13)+'s;--dx:'+(i%2?140:-110)+'px"><path d="M0 0 q7 -11 14 0 q-7 11 -14 0Z" fill="'+lc[i%5]+'"/></g></g>'}
   var rays='';[[600,86,300,640,520,640],[600,86,520,640,420,640],[600,86,690,640,610,640],[600,86,860,640,740,640]].forEach(function(p,k){rays+='<polygon class="ray" style="--dl:-'+k*1.7+'s" points="'+p.join(' ')+'" fill="url(#rayg)"/>'});
@@ -804,7 +2066,7 @@ function home(){
   app.innerHTML='<div class="view">'+
   '<section class="hero"><div class="txt glass"><div class="kick">'+esc(t('kick'))+'</div><h1>Saksham</h1><div class="tagl">'+esc(t('tagline'))+'</div><p>'+esc(t('heroSub'))+'</p></div>'+
   '<div class="mascot"><div class="say glass" id="gsay" aria-live="polite"></div><div class="owlwrap">'+owl(150)+'</div></div></section>'+
-  '<section class="town" id="town" aria-label="Town"><div class="tilt t"></div><div class="tilt b"></div>'+townSVG()+'</section>'+
+  '<section class="town" id="town" aria-label="Town"><div class="tilt t"></div><div class="tilt b"></div>'+townSVG()+'</section>'+townNav()+
   '<section class="cards" aria-label="Buildings">'+RIGHTS.map(function(r){var d=progress.done[r.id];return '<button class="card clay" data-open="'+r.id+'"><span class="bar" style="background:'+r.color+'"></span><div class="ic">'+r.icon+'</div><h3>'+esc(T(r.title))+'</h3><p>'+esc(T(r.blurb))+'</p><span class="tag'+(d?' done':'')+'">'+(d?(esc(t('unlocked'))+' '+'⭐'.repeat(d.stars)):esc(t('play')))+'</span></button>'}).join('')+'</section>'+
   (all?'<section class="cert"><div style="font-size:56px">🏆</div><h2>'+esc(t('certT'))+'</h2><p style="font-weight:700;font-size:18px;margin:6px 0 0">'+esc(t('certTx'))+'</p></section>':'')+
   '<footer class="foot glass">'+esc(t('foot'))+'<div class="row"><button class="btn sm alt" id="share">'+esc(t('share'))+'</button><button class="btn sm alt" id="reset">'+esc(t('reset'))+'</button></div></footer></div>';
@@ -897,7 +2159,9 @@ function closeHelp(){hidePanel($('#help'),function(){$('#helpFab').focus()})}
 
 /* =============== EVENTS =============== */
 app.addEventListener('click',function(e){
-  var b=e.target.closest('[data-open],[data-pick],[data-ans],[data-speak],button[id]');if(!b)return;
+  var b=e.target.closest('[data-open],[data-pick],[data-ans],[data-speak],[data-town],button[id]');if(!b)return;
+   if(b.dataset.town!==undefined){var np=Math.ceil(RIGHTS.length/4),v=b.dataset.town;townPage=v==='next'?(townPage+1)%np:(v==='prev'?(townPage+np-1)%np:+v);
+     var o=document.getElementById('townsvg');if(o){o.outerHTML=townSVG();var nv=document.getElementById('tnav');if(nv)nv.outerHTML=townNav();sfx('whoosh')}return}
   if(b.dataset.open){startRight(b.dataset.open);return}
   if(b.dataset.pick!==undefined){play.pick=+b.dataset.pick;var o=play.r.steps[play.i].options[play.pick];sfx(o.ok?'good':'bad');renderStep();return}
   if(b.dataset.ans!==undefined){if(play.sel!==null)return;play.sel=+b.dataset.ans;var ok=play.qs[play.qi].o[play.sel].ok;if(ok)play.correct++;sfx(ok?'good':'bad');renderStep();return}

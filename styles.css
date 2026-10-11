@@ -1,312 +1,148 @@
-/* ==========================================================================
-   SAKSHAM DESIGN SYSTEM — GLASSMORPHISM & ANIMATED PALETTE
-   ========================================================================== */
+/* SAKSHAM SKIN: motion layer. Pure add-on: it never touches the app's data or logic.
+   Everything is skipped if the visitor prefers reduced motion. */
+(function () {
+  'use strict';
+  var app = document.getElementById('app');
+  if (!app) return;
+  var RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var FINE = window.matchMedia && matchMedia('(pointer: fine)').matches;
+  var COL = ['#ff3d8b', '#ffc400', '#12d1d8', '#3ddc97', '#7b4dff', '#ff5033'];
 
-:root {
-  --primary: #6366f1;
-  --primary-hover: #4f46e5;
-  --accent-yellow: #fbbf24;
-  --accent-rose: #f43f5e;
-  --accent-green: #10b981;
-  --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
-  --glass-bg: rgba(255, 255, 255, 0.08);
-  --glass-border: rgba(255, 255, 255, 0.15);
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --radius-xl: 24px;
-  --radius-md: 12px;
-}
+  /* 1. Marquee ticker above the content: tagline in all 5 languages + helplines */
+  var PH = [
+    'Every Child, Every Right.', 'हर बच्चा, हर अधिकार।', 'ஒவ்வொரு குழந்தை, ஒவ்வொரு உரிமை.',
+    'ప్రతి బిడ్డ, ప్రతి హక్కు.', 'ਹਰ ਬੱਚਾ, ਹਰ ਅਧਿਕਾਰ।',
+    'Childline 1098', 'Emergency 112', 'Legal aid 15100'
+  ];
+  var tick = document.createElement('div');
+  tick.className = 'skx-tick';
+  tick.setAttribute('aria-hidden', 'true');
+  var th = '';
+  for (var k = 0; k < 2; k++) PH.forEach(function (p) { th += '<span>' + p + '</span><b>★</b>'; });
+  tick.innerHTML = '<div class="trk">' + th + '</div>';
+  app.parentNode.insertBefore(tick, app);
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-}
+  /* 2. Scroll progress bar */
+  var bar = document.createElement('div');
+  bar.className = 'skx-prog';
+  bar.setAttribute('aria-hidden', 'true');
+  bar.innerHTML = '<i></i>';
+  document.body.appendChild(bar);
+  var fill = bar.firstChild, busy = false;
+  function onScroll() {
+    if (busy) return;
+    busy = true;
+    requestAnimationFrame(function () {
+      var h = document.documentElement, m = h.scrollHeight - h.clientHeight;
+      fill.style.transform = 'scaleX(' + (m > 0 ? Math.min(1, h.scrollTop / m) : 0) + ')';
+      busy = false;
+    });
+  }
+  addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
 
-body {
-  background: var(--bg-gradient);
-  color: var(--text-main);
-  min-height: 100vh;
-  overflow-x: hidden;
-  position: relative;
-}
+  /* 3. Effects layer (bursts and sparkles) */
+  var fx = document.createElement('div');
+  fx.className = 'skx-fx';
+  fx.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(fx);
+  function gone(el, ms) { setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, ms); }
+  function burst(x, y, n) {
+    for (var i = 0; i < n; i++) {
+      var p = document.createElement('i'), a = Math.random() * 6.283, d = 44 + Math.random() * 70;
+      p.className = 'skx-p';
+      p.style.cssText = 'left:' + x + 'px;top:' + y + 'px;--dx:' + Math.cos(a) * d + 'px;--dy:' + Math.sin(a) * d +
+        'px;--s:' + (7 + Math.random() * 9) + 'px;background:' + COL[i % COL.length] +
+        ';border-radius:' + (Math.random() > .5 ? '50%' : '3px');
+      fx.appendChild(p);
+      gone(p, 850);
+    }
+  }
+  function spark(x, y) {
+    var s = document.createElement('i');
+    s.className = 'skx-sp';
+    s.textContent = '✦';
+    s.style.cssText = 'left:' + x + 'px;top:' + y + 'px;--c:' + COL[Math.floor(Math.random() * COL.length)] +
+      ';--dx:' + (Math.random() * 40 - 20) + 'px';
+    fx.appendChild(s);
+    gone(s, 950);
+  }
+  if (!RM) {
+    document.addEventListener('pointerdown', function (e) {
+      if (e.target.closest && e.target.closest('input,textarea,select')) return;
+      var hot = e.target.closest && e.target.closest('button,a,.bld,.tl,[role="button"]');
+      burst(e.clientX, e.clientY, hot ? 12 : 6);
+    }, true);
+    var last = 0;
+    app.addEventListener('pointermove', function (e) {
+      if (e.pointerType !== 'mouse') return;
+      if (!(e.target.closest && e.target.closest('#town'))) return;
+      var n = Date.now();
+      if (n - last < 70) return;
+      last = n;
+      spark(e.clientX, e.clientY);
+    });
+  }
 
-/* Background Animated Canvas */
-#bg-canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 0;
-  pointer-events: none;
-}
+  /* 4. Cursor ring (desktop mouse only) */
+  if (FINE && !RM) {
+    var cur = document.createElement('div');
+    cur.className = 'skx-cur';
+    cur.setAttribute('aria-hidden', 'true');
+    cur.innerHTML = '<i></i>';
+    document.body.appendChild(cur);
+    var tx = 0, ty = 0, cx = 0, cy = 0, shown = false;
+    addEventListener('pointermove', function (e) {
+      if (e.pointerType !== 'mouse') return;
+      tx = e.clientX; ty = e.clientY;
+      if (!shown) { shown = true; cx = tx; cy = ty; cur.style.opacity = 1; }
+      var h = e.target.closest && e.target.closest('button,a,.bld,.tl,[role="button"],select,input,textarea,label');
+      cur.classList.toggle('hot', !!h);
+    }, { passive: true });
+    document.documentElement.addEventListener('mouseleave', function () { cur.style.opacity = 0; shown = false; });
+    (function loop() {
+      cx += (tx - cx) * 0.22; cy += (ty - cy) * 0.22;
+      cur.style.transform = 'translate(' + cx + 'px,' + cy + 'px)';
+      requestAnimationFrame(loop);
+    })();
+  }
 
-/* Glassmorphism Header Bar */
-.top-nav {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 2rem;
-  background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--glass-border);
-}
+  /* 5. Per-view enhancements, re-applied whenever the app swaps views */
+  var io = (!RM && 'IntersectionObserver' in window) ? new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('skx-in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 }) : null;
 
-.logo-container {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.logo-icon {
-  font-size: 2rem;
-  animation: float 3s ease-in-out infinite;
-}
-
-.brand-title {
-  font-family: 'Outfit', sans-serif;
-  font-weight: 900;
-  font-size: 1.5rem;
-  background: linear-gradient(90deg, #818cf8, #f472b6);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.brand-sub {
-  display: block;
-  font-size: 0.75rem;
-  color: var(--text-muted);
-}
-
-/* Nav Pills */
-.nav-pills {
-  display: flex;
-  gap: 0.5rem;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 0.35rem;
-  border-radius: 999px;
-  border: 1px solid var(--glass-border);
-}
-
-.nav-btn {
-  background: transparent;
-  border: none;
-  color: var(--text-muted);
-  padding: 0.6rem 1.2rem;
-  border-radius: 999px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.nav-btn:hover, .nav-btn.active {
-  background: var(--primary);
-  color: #fff;
-  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
-}
-
-/* Content Container & Tabs */
-.content-wrapper {
-  position: relative;
-  z-index: 10;
-  max-width: 1200px;
-  margin: 2rem auto;
-  padding: 0 1.5rem;
-}
-
-.tab-content {
-  display: none;
-  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.tab-content.active {
-  display: block;
-}
-
-/* Landing Hero Section */
-.hero-card {
-  background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-xl);
-  padding: 4rem 3rem;
-  text-align: center;
-}
-
-.hero-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: 3.5rem;
-  font-weight: 900;
-  margin: 1rem 0;
-  line-height: 1.1;
-}
-
-.hero-subtitle {
-  font-size: 1.2rem;
-  color: var(--text-muted);
-  max-width: 700px;
-  margin: 0 auto 2.5rem;
-}
-
-.hero-actions {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  margin-bottom: 3rem;
-}
-
-.btn-primary, .btn-secondary {
-  padding: 1rem 2rem;
-  border-radius: 999px;
-  font-weight: 700;
-  font-size: 1rem;
-  border: none;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, #6366f1, #a855f7);
-  color: white;
-}
-
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(168, 85, 247, 0.4);
-}
-
-/* Metrics Grid */
-.metrics-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
-}
-
-.metric-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-md);
-  padding: 1.5rem;
-}
-
-.metric-num {
-  font-family: 'Outfit', sans-serif;
-  font-size: 2.5rem;
-  font-weight: 900;
-  color: var(--accent-yellow);
-  display: block;
-}
-
-/* Town Grid */
-.town-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
-  margin-top: 1.5rem;
-}
-
-.building-card {
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-xl);
-  padding: 2rem;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.building-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  background: rgba(255, 255, 255, 0.12);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-}
-
-.b-icon {
-  font-size: 3.5rem;
-  margin-bottom: 1rem;
-}
-
-/* Gyani Mascot Box */
-.gyani-box {
-  margin-top: 3rem;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(244, 63, 94, 0.2));
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-xl);
-  padding: 2rem;
-  display: flex;
-  gap: 1.5rem;
-  align-items: center;
-}
-
-.gyani-avatar {
-  font-size: 4rem;
-  animation: pulse 2s infinite;
-}
-
-.gyani-chips {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
-.gyani-chips button {
-  background: rgba(255,255,255,0.1);
-  border: 1px solid var(--glass-border);
-  color: #fff;
-  padding: 0.4rem 0.8rem;
-  border-radius: 999px;
-  cursor: pointer;
-}
-
-/* Modal Engine */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.8);
-  backdrop-filter: blur(8px);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-overlay.hidden {
-  display: none;
-}
-
-.modal-card {
-  background: #1e1b4b;
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-xl);
-  padding: 2.5rem;
-  max-width: 600px;
-  width: 90%;
-  position: relative;
-}
-
-.modal-close {
-  position: absolute;
-  top: 1rem;
-  right: 1.5rem;
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-/* Animations */
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+  function splitTitle(el) {
+    if (!el || el.getAttribute('data-skx')) return;
+    var t = el.textContent;
+    el.setAttribute('data-skx', '1');
+    el.setAttribute('aria-label', t);
+    el.innerHTML = Array.from(t).map(function (c, i) {
+      return '<span class="skx-l" aria-hidden="true" style="--i:' + i + '">' + c + '</span>';
+    }).join('');
+  }
+  function enhance() {
+    splitTitle(app.querySelector('.hero h1'));
+    var txt = app.querySelector('.hero .txt');
+    if (txt && !txt.querySelector('.skx-stk')) {
+      var s = document.createElement('div');
+      s.className = 'skx-stk';
+      s.setAttribute('aria-hidden', 'true');
+      s.innerHTML = '<i style="--x:90%;--y:-20px;--r:12deg">⚖️</i><i style="--x:-16px;--y:58%;--r:-14deg">📚</i><i style="--x:94%;--y:72%;--r:8deg">🛡️</i>';
+      txt.appendChild(s);
+    }
+    if (io) {
+      var els = app.querySelectorAll('.mapsec,.fsec,.foot,.cert,.bsum,.big,.law,.qbox,.tsec,.bdg,.scard');
+      Array.prototype.forEach.call(els, function (el, i) {
+        if (el.classList.contains('skx-r')) return;
+        el.classList.add('skx-r');
+        el.style.setProperty('--n', Math.min(i % 8, 7));
+        io.observe(el);
+      });
+    }
+  }
+  enhance();
+  new MutationObserver(enhance).observe(app, { childList: true });
+})();

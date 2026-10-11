@@ -1,0 +1,158 @@
+/* ==========================================================
+   SAKSHAM FX — drop-in polish layer
+   Palette: sky blue, coral, sunlight yellow. Spring easing.
+   ========================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap');
+
+:root {
+  --sk-sky: #6EC1F5;
+  --sk-sky-deep: #2F86D0;
+  --sk-coral: #F2796B;
+  --sk-coral-deep: #C9503F;
+  --sk-sun: #FFC93C;
+  --sk-cream: #FFF6DC;
+  --sk-ink: #23324A;
+  --sk-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+html { scroll-behavior: smooth; }
+html.sk-lock, html.sk-lock body { overflow: hidden !important; }
+
+/* ---------- Typography: rounder, friendlier headings ---------- */
+h1, h2, h3, h4, button, [role="button"], .btn {
+  font-family: 'Fredoka', 'Segoe UI', system-ui, -apple-system, 'Noto Sans Devanagari', 'Noto Sans Gurmukhi', 'Noto Sans Tamil', 'Noto Sans Telugu', sans-serif;
+}
+h1, h2 { letter-spacing: 0.2px; }
+
+/* ---------- Springy, squishy interactions (uses translate/scale
+   so it never clobbers your own transform rules) ---------- */
+button, [role="button"], .btn, a[class*="btn"],
+[class*="card"], [class*="building"] {
+  transition: translate .38s var(--sk-spring), scale .38s var(--sk-spring),
+              box-shadow .38s var(--sk-spring), filter .2s ease;
+}
+@media (hover: hover) {
+  button:not(:disabled):hover, [role="button"]:hover, .btn:hover,
+  [class*="card"]:hover, [class*="building"]:hover {
+    translate: 0 -4px;
+    scale: 1.04;
+    filter: saturate(1.12) brightness(1.02);
+  }
+}
+button:not(:disabled):active, [role="button"]:active, .btn:active,
+[class*="building"]:active {
+  translate: 0 2px;
+  scale: 0.95;
+}
+:focus-visible {
+  outline: 3px solid var(--sk-sun);
+  outline-offset: 3px;
+  border-radius: 10px;
+}
+
+/* ---------- Splash screen ---------- */
+#sk-splash {
+  position: fixed; inset: 0; z-index: 2147483000;
+  background: linear-gradient(180deg, #4FB0F0 0%, #9FD8FB 52%, #FFE7A3 100%);
+  overflow: hidden;
+  clip-path: circle(150% at 50% 55%);
+  font-family: 'Fredoka', system-ui, sans-serif;
+  color: #fff;
+}
+#sk-splash.sk-out {
+  animation: sk-iris .95s cubic-bezier(.7, 0, .2, 1) forwards;
+}
+@keyframes sk-iris {
+  to { clip-path: circle(0% at 50% 55%); }
+}
+
+.sk-scene { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.sk-sun { animation: sk-rise 1.5s cubic-bezier(.2, .9, .3, 1) both; }
+@keyframes sk-rise { from { transform: translateY(190px); } to { transform: translateY(0); } }
+.sk-rays { transform-origin: 400px 250px; animation: sk-spin 20s linear infinite; }
+@keyframes sk-spin { to { transform: rotate(360deg); } }
+
+.sk-cloud { animation: sk-drift linear infinite; }
+.sk-cloud.c1 { animation-duration: 26s; animation-delay: -6s; }
+.sk-cloud.c2 { animation-duration: 34s; animation-delay: -20s; }
+.sk-cloud.c3 { animation-duration: 22s; animation-delay: -2s; }
+@keyframes sk-drift { from { transform: translateX(-180px); } to { transform: translateX(1000px); } }
+
+.sk-b {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: sk-pop .75s var(--sk-spring) both;
+  animation-delay: var(--d, 0s);
+}
+@keyframes sk-pop { from { transform: scale(.15, 0); } to { transform: scale(1, 1); } }
+
+.sk-hill { animation: sk-hill 1s cubic-bezier(.2, .9, .3, 1) both; }
+@keyframes sk-hill { from { transform: translateY(80px); } to { transform: translateY(0); } }
+
+.sk-copy {
+  position: absolute; left: 0; right: 0; top: 12%;
+  text-align: center; padding: 0 16px; pointer-events: none;
+}
+.sk-title {
+  margin: 0; font-weight: 700; line-height: 1;
+  font-size: clamp(46px, 12vw, 128px);
+  color: #fff;
+  text-shadow: 0 5px 0 var(--sk-sky-deep), 0 11px 0 rgba(35, 50, 74, .16);
+}
+.sk-l {
+  display: inline-block;
+  animation:
+    sk-drop .85s var(--sk-spring) both,
+    sk-wob 1.9s ease-in-out infinite;
+  animation-delay: calc(.9s + var(--i) * .07s), calc(2.2s + var(--i) * .11s);
+}
+@keyframes sk-drop {
+  from { transform: translateY(-160px) rotate(-14deg) scale(.5); opacity: 0; }
+  to   { transform: none; opacity: 1; }
+}
+@keyframes sk-wob { 50% { transform: translateY(-7px) rotate(1.5deg); } }
+
+.sk-tag {
+  margin: 18px 0 0; font-weight: 500;
+  font-size: clamp(16px, 3.4vw, 28px);
+  color: var(--sk-ink);
+  animation: sk-fade .6s ease 1.9s both;
+}
+@keyframes sk-fade { from { opacity: 0; translate: 0 12px; } to { opacity: 1; translate: 0 0; } }
+
+.sk-bar {
+  position: absolute; left: 50%; bottom: 7%; translate: -50% 0;
+  width: min(300px, 70vw); height: 12px; border-radius: 99px;
+  background: rgba(255, 255, 255, .55);
+  box-shadow: inset 0 2px 4px rgba(35, 50, 74, .18);
+  overflow: hidden;
+}
+.sk-bar i {
+  display: block; height: 100%; width: 0; border-radius: 99px;
+  background: linear-gradient(90deg, var(--sk-coral), var(--sk-sun));
+  animation: sk-load 2.9s cubic-bezier(.45, .05, .3, 1) .3s forwards;
+}
+@keyframes sk-load { to { width: 100%; } }
+
+.sk-skip {
+  position: absolute; right: 18px; bottom: 18px;
+  font: 600 15px 'Fredoka', system-ui, sans-serif;
+  color: var(--sk-ink); background: rgba(255, 255, 255, .7);
+  border: 0; border-radius: 99px; padding: 9px 18px; cursor: pointer;
+  box-shadow: 0 4px 0 rgba(35, 50, 74, .18);
+}
+
+/* ---------- Page wipe (three-band curtain) ---------- */
+#sk-wipe { position: fixed; inset: 0; z-index: 2147482000; pointer-events: none; }
+#sk-wipe div { position: absolute; left: 0; right: 0; transform: translateX(-101%); }
+#sk-wipe div:nth-child(1) { top: 0;      height: 34%; background: var(--sk-sky); }
+#sk-wipe div:nth-child(2) { top: 33.3%;  height: 34%; background: var(--sk-sun); }
+#sk-wipe div:nth-child(3) { top: 66.6%;  height: 34%; background: var(--sk-coral); }
+
+/* ---------- Respect reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  #sk-splash, #sk-wipe { display: none !important; }
+  button, [role="button"], [class*="card"], [class*="building"] { transition: none; }
+}
